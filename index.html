@@ -671,7 +671,7 @@
                 <label for="lubricant">Thread Lubricant / Coating (App. A)</label>
                 <select id="lubricant" onchange="calculateFlange()">
                     <option value="nickel">Loctite 771 Nickel Anti-Seize (μ = 0.11)</option>
-                    <option value="blue">Fluoropolymer Blue B7 Studs (μ = 0.07, Dry)</option>
+                    <option value="blue">Fluoropolymer Coated Blue B7 Studs (μ = 0.07, Dry)</option>
                     <option value="lox8">Lox-8 Paste (CO2 &amp; Cryogenic Plants Only)</option>
                     <option value="threadeze">Chemsearch Threadeze Ultra (Converters)</option>
                 </select>
@@ -684,6 +684,8 @@
                     <option value="B7">ASTM A193 Gr B7 / B16 / A320 L7</option>
                     <option value="B8M_CL2">ASTM A193 Gr B8M / B8 Class 2 (Strain Hardened)</option>
                     <option value="B8M_CL1">ASTM A193 Gr B8M / B8 Class 1 (Restricted)</option>
+                    <option value="ALLOY_31">ASTM A193 Alloy 31</option>
+                    <option value="AS1111">AS1111 Gr 4.6</option>
                 </select>
             </div>
 
@@ -1418,7 +1420,7 @@ const specsCatalog = [
         name: "1F3 - Hemihydrate Slurry / Phos Acid / Pond Water (Alloy 31 150#)",
         mat: "Alloy 31 (UNS N08031)", rating: "150 LB", ratingClass: 150,
         designP: 750, designT: 132, corr: "0.8 mm",
-        boltSpec: "ASTM A193 Alloy 31", nutSpec: "ASTM A194 Alloy 31", defaultBoltType: "B8M_CL2",
+        boltSpec: "ASTM A193 Alloy 31", nutSpec: "ASTM A194 Alloy 31", defaultBoltType: "ALLOY_31",
         gasket: "Butyl Rubber Gasket", gasketThk: 3.0,
         isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
         guard: "Not Required", ammoniaBL: false,
@@ -1539,8 +1541,8 @@ const specsCatalog = [
         code: "A", area: "BENE",
         name: "Class A - LP Process Water / Raw Water (CS ERW 125#)",
         mat: "Carbon Steel ERW (AS 1074 / ASTM A106 Gr B)", rating: "ANSI 125 lb", ratingClass: 150,
-        designP: 700, designT: 50, corr: "1.5 mm", 
-        boltSpec: "AS1111 Gr 4.6 Zinc Plated", nutSpec: "AS1112 Gr 5 Zinc Plated", defaultBoltType: "B7",
+        designP: 700, designT: 50, corr: "1.5 mm",
+        boltSpec: "AS1111 Gr 4.6 Zinc Plated", nutSpec: "AS1112 Gr 5 Zinc Plated", defaultBoltType: "AS1111",
         gasket: "Natural or Reinforced Rubber Gasket on Flat Faces", gasketThk: 3.0,
         isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
         guard: "Not Required", ammoniaBL: false,
@@ -1553,7 +1555,7 @@ const specsCatalog = [
         name: "Class AH - MP Slurry / Gland Water / Process Water (CS Heavy 125#)",
         mat: "Carbon Steel Heavy Wt / Extra Strong (AS 1074 / A106 Gr B)", rating: "ANSI 125 lb", ratingClass: 150,
         designP: 1400, designT: 50, corr: "1.5 mm",
-        boltSpec: "AS1111 Gr 4.6 Zinc Plated", nutSpec: "AS1112 Gr 5 Zinc Plated", defaultBoltType: "B7",
+        boltSpec: "AS1111 Gr 4.6 Zinc Plated", nutSpec: "AS1112 Gr 5 Zinc Plated", defaultBoltType: "AS1111",
         gasket: "Natural or Reinforced Rubber Gasket on Flat Faces", gasketThk: 3.0,
         isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
         guard: "Not Required", ammoniaBL: false,
@@ -1567,7 +1569,7 @@ const specsCatalog = [
         name: "Class AR - Cyclone & Slurry Lines (CS 6mm Rubber Lined 125#)",
         mat: "Carbon Steel w/ 6mm Natural Rubber Lining (3mm on Flange Face)", rating: "ANSI 125 lb", ratingClass: 150,
         designP: 700, designT: 50, corr: "0.0 mm",
-        boltSpec: "AS1111 Gr 4.6 Zinc Plated", nutSpec: "AS1112 Gr 5 Zinc Plated", defaultBoltType: "B7",
+        boltSpec: "AS1111 Gr 4.6 Zinc Plated", nutSpec: "AS1112 Gr 5 Zinc Plated", defaultBoltType: "AS1111",
         gasket: "Integral 3mm Natural Rubber Flange Face + Full Face Soft Rubber (≤50 Shore A)", gasketThk: 3.2,
         isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: true, isHardGasket: false,
         guard: "Not Required", ammoniaBL: false,
@@ -1580,7 +1582,7 @@ const specsCatalog = [
         name: "Class B - Air / Fire Water / Potable / Gland Water (Galv CS 125#)",
         mat: "Galvanised Carbon Steel (AS 1074)", rating: "ANSI 125 lb", ratingClass: 150,
         designP: 750, designT: 30, corr: "1.5 mm",
-        boltSpec: "AS1111 Gr 4.6 Zinc Plated", nutSpec: "AS1112 Gr 5 Zinc Plated", defaultBoltType: "B7",
+        boltSpec: "AS1111 Gr 4.6 Zinc Plated", nutSpec: "AS1112 Gr 5 Zinc Plated", defaultBoltType: "AS1111",
         gasket: "Flat Face Neoprene Insertion Rubber", gasketThk: 3.0,
         isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
         guard: "Not Required", ammoniaBL: false,
@@ -1621,7 +1623,7 @@ const specsCatalog = [
         name: "Class S - Underground Fire Water (ABS Solvent Welded 150#)",
         mat: "ABS Class 12/15 (AS 3518) w/ Galv Backing Rings", rating: "ANSI 150 lb", ratingClass: 150,
         designP: 700, designT: 30, corr: "0.0 mm",
-        boltSpec: "AS1111 Gr 4.6 Galv.", nutSpec: "AS1112 Gr 5 Galv.", defaultBoltType: "B7",
+        boltSpec: "AS1111 Gr 4.6 Galv.", nutSpec: "AS1112 Gr 5 Galv.", defaultBoltType: "AS1111",
         gasket: "Natural or Reinforced Insertion Rubber", gasketThk: 3.0,
         isRubberGasket: true, isNonMetallicFlange: true, isRubberLined: false, isHardGasket: false,
         guard: "Not Required", ammoniaBL: false,
@@ -1634,7 +1636,7 @@ const specsCatalog = [
         name: "Class Q (Q1-Q3) - Slurry / Bore / Potable Water (HDPE PE80B 125/150#)",
         mat: "Polyethylene PE80B w/ Galv Backing Rings", rating: "ANSI 125/150 lb", ratingClass: 150,
         designP: 700, designT: 45, corr: "0.0 mm",
-        boltSpec: "AS1111 Gr 4.6 Galv.", nutSpec: "AS1112 Gr 5 Galv.", defaultBoltType: "B7",
+        boltSpec: "AS1111 Gr 4.6 Galv.", nutSpec: "AS1112 Gr 5 Galv.", defaultBoltType: "AS1111",
         gasket: "Natural or Reinforced Insertion Rubber", gasketThk: 3.0,
         isRubberGasket: true, isNonMetallicFlange: true, isRubberLined: false, isHardGasket: false,
         guard: "Not Required", ammoniaBL: false,
@@ -1647,7 +1649,7 @@ const specsCatalog = [
         name: "Class H - Sump & Pump Slurry (Flexible Rubber Hose 125/150#)",
         mat: "Flexible Rubber Hose w/ Muff Coupling Flanges", rating: "ANSI 125/150 lb", ratingClass: 150,
         designP: 1400, designT: 50, corr: "0.0 mm",
-        boltSpec: "AS1111 Gr 4.6 Galv.", nutSpec: "AS1112 Gr 5 Galv.", defaultBoltType: "B7",
+        boltSpec: "AS1111 Gr 4.6 Galv.", nutSpec: "AS1112 Gr 5 Galv.", defaultBoltType: "AS1111",
         gasket: "Integral Rubber Hose Flange Face", gasketThk: 3.2,
         isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: true, isHardGasket: false,
         guard: "Not Required", ammoniaBL: false,
@@ -1836,7 +1838,13 @@ function calculateFlange() {
     let torqueKey = "B7_nickel";
     let displayBoltGrade = specInfo.boltSpec;
 
-    if (chosenBoltType === "B8M_CL2") {
+    if (chosenBoltType === "ALLOY_31") {
+        torqueKey = null;
+        if (boltOverride !== "AUTO") displayBoltGrade = "ASTM A193 Alloy 31";
+    } else if (chosenBoltType === "AS1111") {
+        torqueKey = null;
+        if (boltOverride !== "AUTO") displayBoltGrade = "AS1111 Gr 4.6";
+    } else if (chosenBoltType === "B8M_CL2") {
         torqueKey = "B8M_CL2";
         if (boltOverride !== "AUTO") displayBoltGrade = "ASTM A193 Gr B8M Class 2 (Strain Hardened)";
     } else if (chosenBoltType === "B8M_CL1") {
@@ -1852,7 +1860,7 @@ function calculateFlange() {
         }
     }
 
-    const torqueObj = (torqueData[bDim.dia] && torqueData[bDim.dia][torqueKey])
+    const torqueObj = (torqueKey && torqueData[bDim.dia] && torqueData[bDim.dia][torqueKey])
         ? torqueData[bDim.dia][torqueKey]
         : { nm: 195, ft: 145 };
 
@@ -1986,7 +1994,39 @@ function calculateFlange() {
     // Torque & Appendix G Handling
     const isAppendixGJoint = specInfo.isNonMetallicFlange || specInfo.isRubberLined;
 
-    if (isAppendixGJoint) {
+    if (chosenBoltType === "ALLOY_31") {
+        document.getElementById("targetTorqueNm").innerText = "Consult Engineer";
+        document.getElementById("targetTorqueFtLbs").innerText = "Consult Engineer";
+        document.getElementById("torqueBasisNote").innerText = "Alloy 31 Bolting — Consult Engineer";
+
+        document.getElementById("t30Nm").innerText = "Consult Engineer";
+        document.getElementById("t30Ft").innerText = "Consult Engineer";
+        document.getElementById("t60Nm").innerText = "Consult Engineer";
+        document.getElementById("t60Ft").innerText = "Consult Engineer";
+        document.getElementById("t100Nm").innerText = "Consult Engineer";
+        document.getElementById("t100Ft").innerText = "Consult Engineer";
+        document.getElementById("t100Nm_4").innerText = "Consult Engineer";
+        document.getElementById("t100Ft_4").innerText = "Consult Engineer";
+        document.getElementById("stage5Pct").innerText = "100%";
+        document.getElementById("tStage5Nm").innerText = "Consult Engineer";
+        document.getElementById("tStage5Ft").innerText = "Consult Engineer";
+    } else if (chosenBoltType === "AS1111") {
+        document.getElementById("targetTorqueNm").innerText = "-";
+        document.getElementById("targetTorqueFtLbs").innerText = "-";
+        document.getElementById("torqueBasisNote").innerText = "-";
+
+        document.getElementById("t30Nm").innerText = "-";
+        document.getElementById("t30Ft").innerText = "-";
+        document.getElementById("t60Nm").innerText = "-";
+        document.getElementById("t60Ft").innerText = "-";
+        document.getElementById("t100Nm").innerText = "-";
+        document.getElementById("t100Ft").innerText = "-";
+        document.getElementById("t100Nm_4").innerText = "-";
+        document.getElementById("t100Ft_4").innerText = "-";
+        document.getElementById("stage5Pct").innerText = "100%";
+        document.getElementById("tStage5Nm").innerText = "-";
+        document.getElementById("tStage5Ft").innerText = "-";
+    } else if (isAppendixGJoint) {
         document.getElementById("targetTorqueNm").innerText = "1/3 Rubber Crush (App. G)";
         document.getElementById("targetTorqueFtLbs").innerText = `Max Steel Ref: ${torqueObj.nm} Nm`;
         document.getElementById("torqueBasisNote").innerText = "Appendix G: Compress rubber gasket/lining by max 1/3 thickness — DO NOT apply full steel Table F-1 torque!";
@@ -2032,15 +2072,21 @@ function calculateFlange() {
     // Update Sticky Mobile Bar
     document.getElementById("mStickySpec").innerText = `${specInfo.code.split('_')[0]} • DN${size}`;
     document.getElementById("mStickyStuds").innerText = `${bDim.count} × ${bDim.dia}" Studs`;
-    document.getElementById("mStickyTorque").innerText = isAppendixGJoint
-        ? "1/3 Crush (App. G)"
-        : `${torqueObj.nm} Nm (${torqueObj.ft} ft-lb)`;
+    if (chosenBoltType === "ALLOY_31") {
+        document.getElementById("mStickyTorque").innerText = "Consult Engineer";
+    } else if (chosenBoltType === "AS1111") {
+        document.getElementById("mStickyTorque").innerText = "-";
+    } else if (isAppendixGJoint) {
+        document.getElementById("mStickyTorque").innerText = "1/3 Crush (App. G)";
+    } else {
+        document.getElementById("mStickyTorque").innerText = `${torqueObj.nm} Nm (${torqueObj.ft} ft-lb)`;
+    }
     const mStickyBadge = document.getElementById("mStickyBadge");
     mStickyBadge.className = `m-badge badge-level-${jointLevel}`;
     mStickyBadge.innerText = `LEVEL ${jointLevel}`;
 
     // Table 5-1 QA & Tooling Requirements
-    const needsPoweredTorque = (!isAppendixGJoint && torqueObj.nm > 700);
+    const needsPoweredTorque = (!isAppendixGJoint && chosenBoltType !== "ALLOY_31" && chosenBoltType !== "AS1111" && torqueObj.nm > 700);
     if (jointLevel === 1) {
         document.getElementById("toolingReq").innerText = "Manual or Auxiliary Powered Tools (Table 5-1)";
         document.getElementById("tagReq").innerText = "Green Level 1 Joint Tag Only (App. C)";
@@ -2107,7 +2153,7 @@ function calculateFlange() {
             type: "danger",
             html: "<strong>Fastener Grade Restriction (Appendix F):</strong> Unstrained Grade B8 / B8M Class 1 stud bolts have low yield strength and <u>should not be used on site</u>. Use strain-hardened <strong>ASTM A193 Grade B8M Class 2</strong> fasteners for corrosive stainless steel applications."
         });
-    } else if (specInfo.boltSpec.includes("B8") || chosenBoltType === "B8M_CL2") {
+    } else if (chosenBoltType === "B8M_CL2") {
         alerts.push({
             type: "info",
             html: "<strong>Stainless Steel Fasteners (Appendix A &amp; F):</strong> Verify stud end stampings for <strong>B8M Class 2</strong> (strain hardened) and apply Loctite 771 Nickel Anti-Seize to threads and nut bearing face to prevent galling."

@@ -1,0 +1,2188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#003b6f">
+    <title>Bolted Flange Management & Line Spec System | Doc 38847 Rev 3.0</title>
+    <style>
+        :root {
+            --primary: #003b6f;
+            --primary-light: #0066b2;
+            --accent: #e6a100;
+            --bg: #f0f4f8;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #cbd5e1;
+            --level1: #16a34a;
+            --level1-bg: #dcfce7;
+            --level2: #d97706;
+            --level2-bg: #fef3c7;
+            --level3: #dc2626;
+            --level3-bg: #fee2e2;
+            --info-bg: #e0f2fe;
+            --info-border: #0284c7;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 16px;
+            padding-bottom: 84px; /* Space for mobile sticky bar */
+            line-height: 1.45;
+        }
+
+        .container {
+            max-width: 1320px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 22px 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Header */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .app-header h1 {
+            color: var(--primary);
+            margin: 0;
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .app-header .subtitle {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+
+        .doc-meta {
+            text-align: right;
+            font-size: 0.8rem;
+            background: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        /* Panels & Grids */
+        .section-panel {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 18px;
+        }
+
+        .section-title {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin: 0 0 12px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .grid-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 12px;
+        }
+
+        .col-span-2 {
+            grid-column: span 2;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 0.84rem;
+            color: #334155;
+        }
+
+        /* 16px font-size prevents iOS Safari from auto-zooming on tap */
+        select, input[type="number"], input[type="text"] {
+            padding: 10px 12px;
+            min-height: 44px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 16px;
+            background: #fff;
+            color: var(--text);
+            width: 100%;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(0, 102, 178, 0.15);
+        }
+
+        /* Collapsible Drawers for Advanced Options & Audit Matrix */
+        details.field-drawer {
+            margin-top: 14px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        details.field-drawer summary {
+            padding: 11px 14px;
+            font-weight: 700;
+            font-size: 0.86rem;
+            color: var(--primary);
+            background: #eef4f8;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            list-style: none;
+        }
+
+        details.field-drawer summary::-webkit-details-marker { display: none; }
+
+        details.field-drawer summary::after {
+            content: "▼ Show / Edit";
+            font-size: 0.76rem;
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+
+        details.field-drawer[open] summary::after {
+            content: "▲ Hide";
+        }
+
+        .drawer-body {
+            padding: 14px;
+        }
+
+        .cond-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 10px 14px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border);
+        }
+
+        .chk-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.88rem;
+            color: #334155;
+            cursor: pointer;
+            padding: 6px 8px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            min-height: 42px;
+        }
+
+        .chk-item input {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            background: #e2e8f0;
+            border: 1px solid #cbd5e1;
+            color: #1e293b;
+            padding: 7px 12px;
+            min-height: 36px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-small:hover, .btn-small:active {
+            background: #cbd5e1;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            border: 1px solid var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+        }
+
+        /* Classification Banner */
+        .classification-banner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 18px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            border: 2px solid transparent;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .banner-level-1 { background-color: var(--level1-bg); border-color: var(--level1); }
+        .banner-level-2 { background-color: var(--level2-bg); border-color: var(--level2); }
+        .banner-level-3 { background-color: var(--level3-bg); border-color: var(--level3); }
+
+        .badge {
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-weight: 800;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .badge-level-1 { background-color: var(--level1); color: #fff; }
+        .badge-level-2 { background-color: var(--level2); color: #fff; }
+        .badge-level-3 { background-color: var(--level3); color: #fff; }
+
+        .reasons-list {
+            margin: 6px 0 0 0;
+            padding-left: 18px;
+            font-size: 0.86rem;
+        }
+
+        .reasons-list li { margin-bottom: 4px; }
+
+        /* Technical Output Cards */
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .result-block {
+            background: #ffffff;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--primary);
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+        }
+
+        .result-block h3 {
+            margin: 0 0 10px 0;
+            font-size: 0.94rem;
+            color: var(--primary);
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 6px;
+        }
+
+        .result-item {
+            margin-bottom: 8px;
+            font-size: 0.88rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .result-item span.label {
+            font-weight: 600;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .result-item span.val {
+            text-align: right;
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        /* Alerts & Warnings */
+        .alert-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .alert-box {
+            padding: 11px 14px;
+            border-radius: 6px;
+            font-size: 0.87rem;
+            border-left: 5px solid;
+        }
+
+        .alert-danger { background: #fef2f2; border-color: #dc2626; color: #991b1b; }
+        .alert-warning { background: #fffbeb; border-color: #d97706; color: #92400e; }
+        .alert-info { background: var(--info-bg); border-color: var(--info-border); color: #075985; }
+
+        /* Torque & Sequence Split View */
+        .split-panel {
+            display: grid;
+            grid-template-columns: 1.35fr 1fr;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .torque-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .torque-table th, .torque-table td {
+            border: 1px solid var(--border);
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        .torque-table th {
+            background-color: #e2e8f0;
+            color: #1e293b;
+            font-weight: 700;
+        }
+
+        .torque-table td.num, .torque-table th.num {
+            text-align: center;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .sequence-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #flangeSvg {
+            width: 100%;
+            max-width: 245px;
+            height: auto;
+        }
+
+        /* Criteria Matrix Table */
+        .criteria-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
+        }
+
+        .crit-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px 14px;
+            font-size: 0.82rem;
+        }
+
+        .crit-card h4 {
+            margin: 0 0 8px 0;
+            font-size: 0.88rem;
+            color: var(--primary);
+        }
+
+        .crit-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .pill {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .pill-pass { background: #dcfce7; color: #166534; }
+        .pill-trig3 { background: #fee2e2; color: #991b1b; }
+        .pill-trig2 { background: #fef3c7; color: #92400e; }
+
+        /* Sticky Mobile Quick-Bar */
+        .mobile-sticky-bar {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--primary);
+            color: #ffffff;
+            padding: 10px 14px;
+            box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.22);
+            z-index: 1000;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+        }
+
+        .mobile-sticky-bar .m-badge {
+            padding: 4px 10px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        /* ====================================================================
+           SMARTPHONE & TABLET RESPONSIVE BREAKPOINTS
+           ==================================================================== */
+        @media (max-width: 960px) {
+            .split-panel { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 680px) {
+            body {
+                padding: 8px;
+                padding-bottom: 76px;
+            }
+
+            .container {
+                padding: 14px 12px;
+                border-radius: 8px;
+            }
+
+            .app-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+
+            .app-header h1 { font-size: 1.25rem; }
+
+            .doc-meta {
+                text-align: left;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .grid-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .col-span-2 {
+                grid-column: span 1;
+            }
+
+            .classification-banner {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 14px;
+            }
+
+            .classification-banner > div:last-child {
+                text-align: left !important;
+                border-top: 1px solid rgba(0,0,0,0.1);
+                padding-top: 10px;
+            }
+
+            /* Responsive Mobile Torque Table - Zero Horizontal Scroll */
+            .torque-table thead {
+                display: none;
+            }
+
+            .torque-table, .torque-table tbody, .torque-table tr, .torque-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .torque-table tr {
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                margin-bottom: 10px;
+                padding: 8px 10px;
+                background: #f8fafc;
+            }
+
+            .torque-table td {
+                border: none;
+                padding: 3px 0;
+                text-align: left !important;
+                white-space: normal !important;
+            }
+
+            .torque-table td:nth-child(1) {
+                font-size: 0.95rem;
+                color: var(--primary);
+                border-bottom: 1px solid #e2e8f0;
+                padding-bottom: 4px;
+                margin-bottom: 4px;
+            }
+
+            .torque-table td.num::before {
+                font-weight: 600;
+                color: var(--text-muted);
+                margin-right: 6px;
+            }
+
+            .torque-table td:nth-child(2)::before { content: "Load %: "; }
+            .torque-table td:nth-child(3)::before { content: "Metric Torque: "; }
+            .torque-table td:nth-child(4)::before { content: "Imperial Torque: "; }
+
+            .torque-table td:last-child {
+                margin-top: 4px;
+                padding-top: 4px;
+                border-top: 1px dashed #cbd5e1;
+                font-size: 0.82rem;
+                color: #334155;
+            }
+
+            .mobile-sticky-bar {
+                display: flex;
+            }
+        }
+
+        @media print {
+            body { background: #fff; padding: 0; }
+            .container { box-shadow: none; padding: 10px; }
+            .no-print, .mobile-sticky-bar { display: none !important; }
+            details.field-drawer { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="app-header">
+        <div>
+            <h1>Bolted Flange Management &amp; Line Spec System</h1>
+            <div class="subtitle">Phosphate Hill Maintenance &amp; Reliability — Procedure 38847 &amp; Site Piping Specs</div>
+        </div>
+        <div class="doc-meta">
+            <div>
+                <div><strong>Procedure:</strong> OnBase 38847 (Ver 3.0)</div>
+                <div><strong>Specs:</strong> 46-D-DB-3001 | 21-D-DB-4000 | 44-D-DB-3000</div>
+            </div>
+            <button class="btn-small btn-primary no-print" onclick="window.print()">Print QA Sheet</button>
+        </div>
+    </div>
+
+    <!-- 1. PRIMARY LINE & FLANGE SELECTION -->
+    <div class="section-panel">
+        <div class="section-title">
+            <span>1. Line Specification &amp; Flange Selection</span>
+            <div class="btn-group no-print">
+                <button class="btn-small" onclick="applyOperatingPreset('nominal')">Typical Operating P &amp; T</button>
+                <button class="btn-small" onclick="applyOperatingPreset('design')">Max Spec Class Limits</button>
+            </div>
+        </div>
+
+        <div class="grid-inputs">
+            <div class="form-group">
+                <label for="plantArea">Plant Area / Circuit</label>
+                <select id="plantArea" onchange="updateSpecDropdown()">
+                    <option value="ALL">-- All Plant Areas --</option>
+                    <option value="GRAN">Granulation Plant (46-D-DB-3001)</option>
+                    <option value="PHOS">Phosphoric Acid Plant (44-D-DB-3000)</option>
+                    <option value="BENE">Beneficiation Plant (21-D-DB-4000)</option>
+                </select>
+            </div>
+
+            <div class="form-group col-span-2">
+                <label for="pipeSpec">Piping Class Specification</label>
+                <select id="pipeSpec" onchange="onSpecChange()"></select>
+            </div>
+
+            <div class="form-group">
+                <label for="fluidService">Fluid Service (Within Spec)</label>
+                <select id="fluidService" onchange="onServiceChange()"></select>
+            </div>
+
+            <div class="form-group">
+                <label for="nominalSize">Nominal Pipe Size (DN / NPS)</label>
+                <select id="nominalSize" onchange="calculateFlange()">
+                    <option value="15">DN15 (1/2")</option>
+                    <option value="20">DN20 (3/4")</option>
+                    <option value="25">DN25 (1")</option>
+                    <option value="40">DN40 (1-1/2")</option>
+                    <option value="50">DN50 (2")</option>
+                    <option value="65">DN65 (2-1/2")</option>
+                    <option value="80">DN80 (3")</option>
+                    <option value="100" selected>DN100 (4")</option>
+                    <option value="150">DN150 (6")</option>
+                    <option value="200">DN200 (8")</option>
+                    <option value="250">DN250 (10")</option>
+                    <option value="300">DN300 (12")</option>
+                    <option value="350">DN350 (14")</option>
+                    <option value="400">DN400 (16")</option>
+                    <option value="450">DN450 (18")</option>
+                    <option value="500">DN500 (20")</option>
+                    <option value="600">DN600 (24")</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="lubricant">Thread Lubricant / Coating (App. A)</label>
+                <select id="lubricant" onchange="calculateFlange()">
+                    <option value="nickel">Loctite 771 Nickel Anti-Seize (μ = 0.11)</option>
+                    <option value="blue">Fluoropolymer Blue B7 Studs (μ = 0.07, Dry)</option>
+                    <option value="lox8">Lox-8 Paste (CO2 &amp; Cryogenic Plants Only)</option>
+                    <option value="threadeze">Chemsearch Threadeze Ultra (Converters)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="boltOverride">Fastener Grade Selection (App. E &amp; F)</label>
+                <select id="boltOverride" onchange="calculateFlange()">
+                    <option value="AUTO">Per Piping Spec Default (Recommended)</option>
+                    <option value="B7">ASTM A193 Gr B7 / B16 / A320 L7</option>
+                    <option value="B8M_CL2">ASTM A193 Gr B8M / B8 Class 2 (Strain Hardened)</option>
+                    <option value="B8M_CL1">ASTM A193 Gr B8M / B8 Class 1 (Restricted)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="rubberRuleMode">Sec 5.1 Rubber Gasket Interpretation</label>
+                <select id="rubberRuleMode" onchange="calculateFlange()">
+                    <option value="strict">Procedure Sec 5.1 Literal (Rubber = Level 1 if not L3)</option>
+                    <option value="conservative">Conservative (Corrosive/Acid or &gt;90°C Rubber = Level 2)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- EXPANDABLE DRAWER FOR OPERATING P/T & SECTION 5 FLAGS -->
+        <details class="field-drawer" id="advancedDrawer" open>
+            <summary>Operating P &amp; T Conditions &amp; Section 5 Joint Overrides</summary>
+            <div class="drawer-body">
+                <div class="cond-bar">
+                    <div class="form-group">
+                        <label for="opPress">Operating Pressure (kPag) [Limit: 1035]</label>
+                        <input type="number" id="opPress" step="10" onchange="calculateFlange()" oninput="calculateFlange()">
+                    </div>
+                    <div class="form-group">
+                        <label for="opTemp">Operating Temp (°C) [L1: ≤90 | L3: &gt;150]</label>
+                        <input type="number" id="opTemp" step="5" onchange="calculateFlange()" oninput="calculateFlange()">
+                    </div>
+                    <div class="form-group">
+                        <label>Spec Class P-T Limit</label>
+                        <input type="text" id="specDesignLimitDisplay" readonly style="background:#e2e8f0; font-weight:600;">
+                    </div>
+                    <div class="form-group">
+                        <label>Fluid Hazard Profile (Sec 5)</label>
+                        <input type="text" id="fluidHazardDisplay" readonly style="background:#e2e8f0; font-weight:600;">
+                    </div>
+                </div>
+
+                <div class="checkbox-grid">
+                    <label class="chk-item">
+                        <input type="checkbox" id="chkAmmoniaBL" onchange="calculateFlange()">
+                        <span>Within Ammonia Plant Battery Limits (Sec 5)</span>
+                    </label>
+                    <label class="chk-item">
+                        <input type="checkbox" id="chkHeatExchanger" onchange="calculateFlange()">
+                        <span>Heat Exchanger Channel Head / Tube Sheet (Sec 5)</span>
+                    </label>
+                    <label class="chk-item">
+                        <input type="checkbox" id="chkProblematic" onchange="calculateFlange()">
+                        <span>Identified as Problematic Joint (Sec 5)</span>
+                    </label>
+                    <label class="chk-item">
+                        <input type="checkbox" id="chkTensioning" onchange="calculateFlange()">
+                        <span>Requires Hydraulic Stud Tensioning (Sec 5)</span>
+                    </label>
+                    <label class="chk-item">
+                        <input type="checkbox" id="chkDesignedFlange" onchange="calculateFlange()">
+                        <span>Designed Flange (Non-ASME Manway/Duct)</span>
+                    </label>
+                    <label class="chk-item">
+                        <input type="checkbox" id="chkRTJ" onchange="calculateFlange()">
+                        <span>Ring Type Joint (RTJ) Facing (Table 6-2)</span>
+                    </label>
+                </div>
+            </div>
+        </details>
+    </div>
+
+    <!-- 2. CLASSIFICATION BANNER (DOC 38847 SECTION 5) -->
+    <div id="classificationBanner" class="classification-banner banner-level-1">
+        <div style="flex: 1; min-width: 240px;">
+            <div style="font-size:0.78rem; font-weight:700; text-transform:uppercase; color:var(--text-muted);">Doc 38847 Section 5 Joint Classification</div>
+            <div id="classificationTitle" style="font-size:1.18rem; font-weight:800; margin-top:2px;">Level 1 Joint — Mild Service</div>
+            <ul id="classificationReasons" class="reasons-list"></ul>
+        </div>
+        <div style="text-align:right;">
+            <span id="jointLevelBadge" class="badge badge-level-1">LEVEL 1 JOINT</span>
+            <div id="competencySummary" style="font-size:0.8rem; margin-top:6px; font-weight:600;"></div>
+        </div>
+    </div>
+
+    <!-- ALERTS & PROCEDURE WARNINGS -->
+    <div id="alertStack" class="alert-stack"></div>
+
+    <!-- 3. TECHNICAL SPECIFICATION CARDS -->
+    <div class="result-grid">
+        <div class="result-block">
+            <h3>Pipe &amp; Flange Specification</h3>
+            <div class="result-item"><span class="label">Piping Class:</span> <span class="val" id="outSpecCode">-</span></div>
+            <div class="result-item"><span class="label">Pipe Material:</span> <span class="val" id="pipeMat">-</span></div>
+            <div class="result-item"><span class="label">Flange Rating:</span> <span class="val" id="flangeRating">-</span></div>
+            <div class="result-item"><span class="label">Class P-T Limit:</span> <span class="val" id="tempLimit">-</span></div>
+            <div class="result-item"><span class="label">Corrosion Allow.:</span> <span class="val" id="corrAllow">-</span></div>
+        </div>
+
+        <div class="result-block">
+            <h3>Fasteners &amp; Studs (App. E &amp; F)</h3>
+            <div class="result-item"><span class="label">Bolt Grade:</span> <span class="val" id="boltGrade">-</span></div>
+            <div class="result-item"><span class="label">Nut Grade:</span> <span class="val" id="nutGrade">-</span></div>
+            <div class="result-item"><span class="label">Stud Diameter:</span> <span class="val" id="boltDia">-</span></div>
+            <div class="result-item"><span class="label">Stud Quantity:</span> <span class="val" id="boltCount">-</span></div>
+            <div class="result-item"><span class="label">Thread Engagement:</span> <span class="val">Min. 2 Threads Past Nut</span></div>
+        </div>
+
+        <div class="result-block">
+            <h3>Gasket &amp; Splash Guard (App. G, H, J)</h3>
+            <div class="result-item"><span class="label">Specified Gasket:</span> <span class="val" id="gasketType">-</span></div>
+            <div class="result-item"><span class="label">Thickness (t):</span> <span class="val" id="gasketThk">-</span></div>
+            <div class="result-item"><span class="label">Max Face Gap:</span> <span class="val" id="maxFaceGap">-</span></div>
+            <div class="result-item"><span class="label">Defect Class:</span> <span class="val" id="defectCat">-</span></div>
+            <div class="result-item"><span class="label">Splash Guard:</span> <span class="val" id="sprayGuard">-</span></div>
+        </div>
+
+        <div class="result-block">
+            <h3>Load Control &amp; QA (Table 5-1)</h3>
+            <div class="result-item"><span class="label">Target Torque (100%):</span> <span class="val"><b id="targetTorqueNm" style="color:var(--primary); font-size:1.05em;">-</b> (<span id="targetTorqueFtLbs">-</span>)</span></div>
+            <div class="result-item"><span class="label">Min. Tooling:</span> <span class="val" id="toolingReq">-</span></div>
+            <div class="result-item"><span class="label">Flange Tag:</span> <span class="val" id="tagReq">-</span></div>
+            <div class="result-item"><span class="label">FIC Checklist:</span> <span class="val" id="ficReq">-</span></div>
+            <div class="result-item"><span class="label">QA Record Filing:</span> <span class="val" id="qaFiling">-</span></div>
+        </div>
+    </div>
+
+    <!-- 4. TORQUE PASS SCHEDULE & SVG TIGHTENING SEQUENCE -->
+    <div class="split-panel">
+        <div class="section-panel" style="margin-bottom:0; background:#fff;">
+            <div class="section-title">
+                <span>Controlled Bolting Pass Schedule (Table 6-2 &amp; App. G)</span>
+                <span id="torqueBasisNote" style="font-size:0.78rem; color:var(--text-muted); font-weight:normal;"></span>
+            </div>
+            <table class="torque-table">
+                <thead>
+                    <tr>
+                        <th style="width:18%;">Stage</th>
+                        <th class="num" style="width:12%;">Load %</th>
+                        <th class="num" style="width:18%;">Torque (Nm)</th>
+                        <th class="num" style="width:18%;">Torque (ft.lbs)</th>
+                        <th>Procedure Method (Doc 38847 Table 6-2)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Break Joint</strong></td>
+                        <td class="num">2-Pass</td>
+                        <td class="num">Release ~50%</td>
+                        <td class="num">1/4–1/2 Turn</td>
+                        <td>De-tension in numbered cross sequence (App. B) in 2 stages; verify line depressurised (OnBase 38690).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Install</strong></td>
+                        <td class="num">Snug</td>
+                        <td class="num">Hand / Nip-up</td>
+                        <td class="num">Hand / Nip-up</td>
+                        <td>Lubricate threads &amp; nut face. Hand tighten then nip up per pattern. Check circumferential gap uniformity.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stage 1</strong></td>
+                        <td class="num">30%</td>
+                        <td class="num" id="t30Nm">-</td>
+                        <td class="num" id="t30Ft">-</td>
+                        <td>Tighten to 30% in numbered cross sequence (App. B). Check flange gap uniformity. (CSE slip plates stop at Stage 1).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stage 2</strong></td>
+                        <td class="num">60%</td>
+                        <td class="num" id="t60Nm">-</td>
+                        <td class="num" id="t60Ft">-</td>
+                        <td>Tighten to 60% in numbered cross sequence (App. B). Check flange gap uniformity.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stage 3</strong></td>
+                        <td class="num">100%</td>
+                        <td class="num" id="t100Nm">-</td>
+                        <td class="num" id="t100Ft">-</td>
+                        <td>Tighten to 100% final torque in numbered cross sequence (App. B). Check flange gap uniformity.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stage 4</strong></td>
+                        <td class="num">100%</td>
+                        <td class="num" id="t100Nm_4">-</td>
+                        <td class="num" id="t100Ft_4">-</td>
+                        <td>Working clockwise or anti-clockwise, make a circular pass torqueing each adjacent bolt to 100%.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stage 5</strong></td>
+                        <td class="num" id="stage5Pct">100%</td>
+                        <td class="num" id="tStage5Nm">-</td>
+                        <td class="num" id="tStage5Ft">-</td>
+                        <td id="stage5Method">Repeat Stage 4 rotational pass until no further nut rotation occurs.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="sequence-card">
+            <div class="section-title" style="width:100%;">
+                <span>Appendix B Tightening Sequence</span>
+                <span id="seqBoltLabel" style="font-size:0.82rem; color:var(--primary-light);">8 Bolts</span>
+            </div>
+            <svg id="flangeSvg" viewBox="0 0 260 260"></svg>
+            <div id="seqOrderText" style="font-size:0.82rem; color:var(--text-muted); text-align:center; margin-top:8px; max-width:95%;"></div>
+        </div>
+    </div>
+
+    <!-- 5. SECTION 5 AUDIT TRAIL & ALIGNMENT / DEFECT ALLOWANCE REFERENCE -->
+    <details class="field-drawer" id="auditDrawer" open>
+        <summary>2. Procedure Verification Matrix (Sec 5 Criteria, Table 6-1 Alignment &amp; App. J Defects)</summary>
+        <div class="drawer-body">
+            <div class="criteria-grid">
+                <div class="crit-card">
+                    <h4>Level 3 Critical Triggers (Any 1 = Level 3)</h4>
+                    <div id="level3AuditRows"></div>
+                </div>
+                <div class="crit-card">
+                    <h4>Level 1 Mild Service Criteria (Sec 5.1)</h4>
+                    <div id="level1AuditRows"></div>
+                </div>
+                <div class="crit-card">
+                    <h4>Alignment &amp; Surface Limits (Table 6-1 &amp; App. J)</h4>
+                    <div class="crit-row"><span>Parallelism Tolerance:</span> <strong>Max 1 in 200 mm</strong></div>
+                    <div class="crit-row"><span>Concentricity (OD/Bore):</span> <strong>Max 1.5 mm</strong></div>
+                    <div class="crit-row"><span>Rotational Hole Alignment:</span> <strong>Max 3.0 mm (1/8")</strong></div>
+                    <div class="crit-row"><span>Max At-Rest Face Gap:</span> <strong id="refMaxGap">&lt; 2 × Gasket Thk</strong></div>
+                    <div class="crit-row"><span>Defect Depth (r<sub>d</sub> &lt; w/4):</span> <strong id="defW4">-</strong></div>
+                    <div class="crit-row"><span>Defect Depth (w/4 &lt; r<sub>d</sub> &lt; w/2):</span> <strong id="defW2">-</strong></div>
+                    <div class="crit-row"><span>Defect Depth (w/2 &lt; r<sub>d</sub> &lt; 3w/4):</span> <strong id="def3W4">-</strong></div>
+                </div>
+            </div>
+        </div>
+    </details>
+</div>
+
+<!-- STICKY BOTTOM SUMMARY BAR FOR SMARTPHONES -->
+<div class="mobile-sticky-bar no-print">
+    <div>
+        <div id="mStickySpec" style="font-weight:700;">1B3 • DN100</div>
+        <div id="mStickyStuds" style="font-size:0.75rem; opacity:0.9;">8 × 5/8" Studs</div>
+    </div>
+    <div style="text-align:center;">
+        <div style="font-size:0.7rem; text-transform:uppercase; opacity:0.85;">100% Target</div>
+        <div id="mStickyTorque" style="font-weight:800; font-size:0.95rem; color:#fde047;">110 Nm</div>
+    </div>
+    <span id="mStickyBadge" class="m-badge badge-level-1">LEVEL 1</span>
+</div>
+
+<script>
+// ============================================================================
+// 1. COMPLETE PIPING SPECIFICATION CATALOG (46-D-DB-3001, 21-D-DB-4000, 44-D-DB-3000)
+// ============================================================================
+const specsCatalog = [
+    // ================= GRANULATION PLANT (46-D-DB-3001) =================
+    {
+        code: "1B3", area: "GRAN",
+        name: "1B3 - Instrument Air / Potable Water (Galv CS 150#)",
+        mat: "Galvanised Carbon Steel (ASTM A53 Gr B)", rating: "150#", ratingClass: 150,
+        designP: 1650, designT: 93, corr: "1.5 mm",
+        boltSpec: "ASTM A193 Gr B7 Galv", nutSpec: "ASTM A194 Gr 2H Galv", defaultBoltType: "B7",
+        gasket: "Flat Ring Synthetic Fibre (Garlock Blueguard #3700 w/ EPDM Binder)", gasketThk: 2.0,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Instrument Air (IA)", hazard: "MILD", nomP: 750, nomT: 40 },
+            { name: "Potable Water (PO)", hazard: "MILD", nomP: 600, nomT: 35 }
+        ]
+    },
+    {
+        code: "1A8", area: "GRAN",
+        name: "1A8 - Plant Air / Process Water (CS 150#)",
+        mat: "Carbon Steel (ASTM A53 Gr B)", rating: "150#", ratingClass: 150,
+        designP: 1550, designT: 121, corr: "1.5 mm",
+        boltSpec: "ASTM A193 Gr B7", nutSpec: "ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "Flat Ring Synthetic Fibre (Garlock Blueguard #3700 w/ EPDM Binder)", gasketThk: 2.0,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Plant Air (PA)", hazard: "MILD", nomP: 750, nomT: 45 },
+            { name: "Process Water (PW)", hazard: "MILD", nomP: 700, nomT: 45 }
+        ]
+    },
+    {
+        code: "1A10", area: "GRAN",
+        name: "1A10 - Fuel Oil / Coating Oil (CS 150#)",
+        mat: "Carbon Steel (ASTM A53 Gr B)", rating: "150#", ratingClass: 150,
+        designP: 1250, designT: 204, corr: "1.5 mm",
+        boltSpec: "ASTM A193 Gr B7", nutSpec: "ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "Spiral Wound 304SS, Flexite Filler & CS Outer Ring (Flexitallic Style CG)", gasketThk: 3.0,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: true,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Fuel Oil (Combustible/Flammable)", hazard: "FLAMMABLE", nomP: 650, nomT: 80 },
+            { name: "Coating Oil (CO)", hazard: "DAMAGING", nomP: 650, nomT: 75 }
+        ]
+    },
+    {
+        code: "1A14", area: "GRAN",
+        name: "1A14 - Defoamer (CS 150#)",
+        mat: "Carbon Steel (ASTM A53 Gr B, Elec. Trace Heated)", rating: "150#", ratingClass: 150,
+        designP: 1250, designT: 204, corr: "1.5 mm",
+        boltSpec: "ASTM A193 Gr B7", nutSpec: "ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "Spiral Wound 304SS, Flexite Filler & CS Outer Ring (Flexitallic Style CG)", gasketThk: 3.0,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: true,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Defoamer (DF)", hazard: "DAMAGING", nomP: 600, nomT: 65 }
+        ]
+    },
+    {
+        code: "1A9", area: "GRAN",
+        name: "1A9 - MP Condensate / MP Steam (CS 150#)",
+        mat: "Carbon Steel (ASTM A53 Gr B)", rating: "150#", ratingClass: 150,
+        designP: 1250, designT: 204, corr: "1.5 mm",
+        boltSpec: "ASTM A193 Gr B7", nutSpec: "ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "Spiral Wound 304SS, Flexite Filler & CS Outer Ring (Flexitallic Style CG)", gasketThk: 3.0,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: true,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Medium Pressure Steam (MS)", hazard: "DAMAGING", nomP: 1100, nomT: 185 },
+            { name: "Medium Pressure Condensate (MC)", hazard: "DAMAGING", nomP: 800, nomT: 140 }
+        ]
+    },
+    {
+        code: "1A11", area: "GRAN",
+        name: "1A11 - 93%-98% Sulphuric Acid (CS 150#)",
+        mat: "Carbon Steel (ASTM A53 Gr B, Max Vel 1 m/s)", rating: "150#", ratingClass: 150,
+        designP: 1250, designT: 75, corr: "3.0 mm",
+        boltSpec: "ASTM A193 Gr B7", nutSpec: "ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "Spiral Wound 304SS Flexitallic CG / Klinger TopChem 2005 PTFE", gasketThk: 3.0,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: true,
+        guard: "Mandatory (Teflon Ramco Spra-Gard 150)", ammoniaBL: false,
+        services: [
+            { name: "93%-98% Sulphuric Acid", hazard: "TOXIC", nomP: 600, nomT: 50 }
+        ]
+    },
+    {
+        code: "1D6", area: "GRAN",
+        name: "1D6 - Ammonium Phosphate Slurry (316L SS 150#)",
+        mat: "316L Stainless Steel (ASTM A312 TP316L)", rating: "150#", ratingClass: 150,
+        designP: 1250, designT: 204, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B7 (or Gr B8M Cl 2)", nutSpec: "ASTM A194 Gr 2H (or Gr 8M)", defaultBoltType: "B7",
+        gasket: "Flat Ring, Teflon Envelope, Split Type w/ Inert Filler", gasketThk: 3.0,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Ammonium Phosphate Slurry (SL)", hazard: "DAMAGING", nomP: 700, nomT: 115 }
+        ]
+    },
+    {
+        code: "1D7", area: "GRAN",
+        name: "1D7 - Scrubber Liquor / Tailgas Water (316L SS 150#)",
+        mat: "316L Stainless Steel (ASTM A312 TP316L)", rating: "150#", ratingClass: 150,
+        designP: 1250, designT: 204, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B8M Class 2 (Spec: B7 / Site Rec: B8M Cl 2)", nutSpec: "ASTM A194 Gr 8M / 2H", defaultBoltType: "B8M_CL2",
+        gasket: "Flat Ring, Teflon Envelope, Split Type w/ Inert Filler", gasketThk: 3.0,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Scrubber Liquor Slurry (SQ)", hazard: "DAMAGING", nomP: 650, nomT: 85 },
+            { name: "Tailgas Water & Corrosive Waste Water (WW)", hazard: "DAMAGING", nomP: 600, nomT: 80 },
+            { name: "Process Water (Connected to Acidic Water)", hazard: "DAMAGING", nomP: 650, nomT: 50 }
+        ]
+    },
+    {
+        code: "1D11", area: "GRAN",
+        name: "1D11 - 93%-98% Sulphuric Acid (Alloy 20 150#)",
+        mat: "Alloy 20", rating: "150#", ratingClass: 150,
+        designP: 1250, designT: 75, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B7 / B8M Class 2", nutSpec: "ASTM A194 Gr 2H / 8M", defaultBoltType: "B7",
+        gasket: "Klinger TopChem 2005 PTFE", gasketThk: 3.0,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Mandatory (Teflon Ramco Spra-Gard 150)", ammoniaBL: false,
+        services: [
+            { name: "93%-98% Sulphuric Acid", hazard: "TOXIC", nomP: 600, nomT: 55 }
+        ]
+    },
+    {
+        code: "1D12", area: "GRAN",
+        name: "1D12 - 93%-98% Sulphuric Acid (316L SS 150#)",
+        mat: "316L Stainless Steel (ASTM A312 TP316L)", rating: "150#", ratingClass: 150,
+        designP: 1250, designT: 204, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B7 (or Gr B8M Cl 2)", nutSpec: "ASTM A194 Gr 2H (or Gr 8M)", defaultBoltType: "B7",
+        gasket: "Klinger TopChem 2005 PTFE", gasketThk: 3.0,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Mandatory (Teflon Ramco Spra-Gard 150 + Leak Tube)", ammoniaBL: false,
+        services: [
+            { name: "93%-98% Sulphuric Acid", hazard: "TOXIC", nomP: 600, nomT: 60 }
+        ]
+    },
+    {
+        code: "1D13_GRAN", area: "GRAN",
+        name: "1D13 - Water & Air Utility Services (316L SS Viega Sanpress 150#)",
+        mat: "316L Stainless Steel (Viega Sanpress Inox 1.4401)", rating: "150#", ratingClass: 150,
+        designP: 1600, designT: 110, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B7 Galv (Touched up after tightening)", nutSpec: "ASTM A194 Gr 2H Galv", defaultBoltType: "B7",
+        gasket: "Spiral Wound 316SS w/ Graphite Filler, Inner & Outer Ring", gasketThk: 3.2,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: true,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Process / Fire / Potable / Gland Water", hazard: "MILD", nomP: 700, nomT: 40 },
+            { name: "Plant Air / Instrument Air", hazard: "MILD", nomP: 750, nomT: 40 }
+        ]
+    },
+    {
+        code: "1A13", area: "GRAN",
+        name: "1A13 - Corrosive Waste Water / Tailgas Water (CS Rubber Lined 125/150#)",
+        mat: "DN15-50: 316L SS | DN80+: CS w/ 6mm Chemoline 4 Rubber Lining", rating: "125/150#", ratingClass: 150,
+        designP: 686, designT: 88, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B7", nutSpec: "ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "Full Face Neoprene Rubber (JM-112 / App. G ≤50 Shore A)", gasketThk: 3.2,
+        isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: true, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Tailgas Water / Corrosive Waste Water (WW)", hazard: "DAMAGING", nomP: 450, nomT: 70 }
+        ]
+    },
+    {
+        code: "1A12", area: "GRAN",
+        name: "1A12 - Phosphoric Acid (CS Rubber Lined / 317L SS 125/150#)",
+        mat: "DN15-50: 317L SS | DN80-150: CS w/ 6mm Chemoline 4 Rubber Lining", rating: "125/150#", ratingClass: 150,
+        designP: 686, designT: 88, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B7", nutSpec: "ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "Full Face Neoprene Rubber (JM-112 / App. G ≤50 Shore A)", gasketThk: 3.2,
+        isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: true, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Phosphoric Acid (PH)", hazard: "DAMAGING", nomP: 500, nomT: 75 }
+        ]
+    },
+    {
+        code: "1F6_GRAN", area: "GRAN",
+        name: "1F6 - Phosphoric Acid 40%, 52% / Process Gas (SAF 2507 150#)",
+        mat: "Super Duplex SAF 2507 (UNS S32750)", rating: "150#", ratingClass: 150,
+        designP: 750, designT: 132, corr: "0.8 mm",
+        boltSpec: "ASTM A193 Gr B8M Class 2", nutSpec: "ASTM A194 Gr 8M", defaultBoltType: "B8M_CL2",
+        gasket: "Viton Rubber Gasket", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Phosphoric Acid (PH) 40% / 52%", hazard: "DAMAGING", nomP: 550, nomT: 95 },
+            { name: "Process Gas (PG)", hazard: "DAMAGING", nomP: 200, nomT: 85 }
+        ]
+    },
+    {
+        code: "3A4", area: "GRAN",
+        name: "3A4 - Anhydrous Ammonia Vapour > -29°C (CS 300#)",
+        mat: "Carbon Steel (ASTM A106 Gr B / A53 Gr B)", rating: "300#", ratingClass: 300,
+        designP: 3500, designT: 343, corr: "2.0 mm",
+        boltSpec: "ASTM A193 Gr B7 (Replace any B7M per Sec 6.4)", nutSpec: "ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "Spiral Wound 304SS, Flexite Filler & CS Ring (Flexitallic CG / Style 12 T&G)", gasketThk: 3.0,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: true,
+        guard: "Not Required", ammoniaBL: true,
+        services: [
+            { name: "Anhydrous Ammonia Vapour (AR)", hazard: "TOXIC", nomP: 1800, nomT: 120 }
+        ]
+    },
+    {
+        code: "3A2", area: "GRAN",
+        name: "3A2 - Liquid Anhydrous Ammonia Low Temp (LTCS 300#)",
+        mat: "Low-Temp Carbon Steel (ASTM A333 Gr 1 / A350 Gr LF1)", rating: "300#", ratingClass: 300,
+        designP: 5000, designT: -29, corr: "2.0 mm",
+        boltSpec: "ASTM A320 Gr L7 (Sec 6.4 Low-Temp Ammonia)", nutSpec: "ASTM A194 Gr 4 / Gr 7", defaultBoltType: "B7",
+        gasket: "Spiral Wound 304SS, Flexite Filler & CS Outer Ring (Flexitallic Style CG)", gasketThk: 3.0,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: true,
+        guard: "Not Required", ammoniaBL: true,
+        services: [
+            { name: "Liquid Anhydrous Ammonia (LA) (-29°C to -46°C)", hazard: "TOXIC", nomP: 2200, nomT: -33 }
+        ]
+    },
+    {
+        code: "3A3", area: "GRAN",
+        name: "3A3 - Fuel Gas / Natural Gas (CS 300#)",
+        mat: "Carbon Steel (ASTM A106 Gr B / A53 Gr B)", rating: "300#", ratingClass: 300,
+        designP: 5000, designT: 40, corr: "1.5 mm",
+        boltSpec: "ASTM A193 Gr B7", nutSpec: "ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "Spiral Wound 304SS, Flexite Filler & CS Outer Ring (Flexitallic Style CG)", gasketThk: 3.0,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: true,
+        guard: "Not Required", ammoniaBL: false, isNaturalGas: true,
+        services: [
+            { name: "Fuel Gas / Natural Gas (FG)", hazard: "FLAMMABLE", nomP: 2000, nomT: 35 }
+        ]
+    },
+    {
+        code: "3D1", area: "GRAN",
+        name: "3D1 - Anhydrous Ammonia Vapour (316L SS 300#)",
+        mat: "316L Stainless Steel (ASTM A312 TP316L)", rating: "300# (DN15-50 SW 150#)", ratingClass: 300,
+        designP: 2370, designT: 200, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B7 (or Gr B8M Cl 2)", nutSpec: "ASTM A194 Gr 2H (or Gr 8M)", defaultBoltType: "B7",
+        gasket: "Flat Ring, Teflon Envelope w/ Inert Filler, Split Type", gasketThk: 3.0,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: true,
+        services: [
+            { name: "Anhydrous Ammonia Vapour (AR)", hazard: "TOXIC", nomP: 1600, nomT: 110 }
+        ]
+    },
+
+    // ================= PHOSPHORIC ACID PLANT (44-D-DB-3000) =================
+    {
+        code: "0A1", area: "PHOS",
+        name: "0A1 - Process Gas / Pond Water / Phos Acid / Slurry (CS Rubber Lined 150#)",
+        mat: "Carbon Steel + Internal Butyl Rubber Lining (4mm min)", rating: "150 LB", ratingClass: 150,
+        designP: 280, designT: 98, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B7", nutSpec: "ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "Butyl Rubber Full Face (V#2010, App. G ≤50 Shore A)", gasketThk: 3.2,
+        isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: true, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Phosphoric Acid (PH) / Acidic Waste (WA)", hazard: "DAMAGING", nomP: 250, nomT: 80 },
+            { name: "Process Gas (PG)", hazard: "DAMAGING", nomP: 100, nomT: 85 },
+            { name: "Pond Water (WP) / Rock Slurry (SL*)", hazard: "MILD", nomP: 250, nomT: 50 }
+        ]
+    },
+    {
+        code: "0P1", area: "PHOS",
+        name: "0P1 - Phosphoric Acid (Polypropylene PPH PN10 125#)",
+        mat: "Polypropylene (PPH DIN 8078 PN10 w/ PP Backing Flange)", rating: "125 LB (Drilled CL150)", ratingClass: 150,
+        designP: 79, designT: 95, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B7 w/ Washer", nutSpec: "ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "Butyl Rubber Gasket (V#2010)", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: true, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Phosphoric Acid (PH) (Vacuum / Low Press)", hazard: "DAMAGING", nomP: 50, nomT: 75 }
+        ]
+    },
+    {
+        code: "0P2", area: "PHOS",
+        name: "0P2 - Phosphoric Acid / Rock Slurry (PP PN10 / SAF 2507 125/150#)",
+        mat: "Polypropylene PPH PN10 / SAF 2507 UNS S32750", rating: "125 LB / 150 LB", ratingClass: 150,
+        designP: 79, designT: 80, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B8M Class 2 w/ Washer", nutSpec: "ASTM A194 Gr 8M", defaultBoltType: "B8M_CL2",
+        gasket: "Butyl Rubber Gasket (V#2010)", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: true, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Phosphoric Acid (PH)", hazard: "DAMAGING", nomP: 60, nomT: 70 },
+            { name: "Phosphate Rock Slurry (SL*)", hazard: "MILD", nomP: 60, nomT: 45 }
+        ]
+    },
+    {
+        code: "0Q2", area: "PHOS",
+        name: "0Q2 - Acidic Waste Water (HDPE PE80B PN12.5 125#)",
+        mat: "HDPE PE80B PN12.5 w/ Galv CS Backing Flange", rating: "125 LB (Drilled CL150)", ratingClass: 150,
+        designP: 700, designT: 55, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B7 w/ Washer", nutSpec: "ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "Butyl Rubber Gasket (V#2010)", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: true, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Acidic Waste Water (WA)", hazard: "DAMAGING", nomP: 450, nomT: 40 }
+        ]
+    },
+    {
+        code: "0R1", area: "PHOS",
+        name: "0R1 - Phosphoric Acid / Hemihydrate & Rock Slurry (FRP 125#)",
+        mat: "FRP (Vinyl Ester Resin Hetron 980)", rating: "125 LB (Drilled CL150)", ratingClass: 150,
+        designP: 750, designT: 100, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B8M Class 2 w/ Washer", nutSpec: "ASTM A194 Gr 8M", defaultBoltType: "B8M_CL2",
+        gasket: "Butyl Rubber Gasket (V#2010)", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: true, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Phosphoric Acid (PH) / Hemihydrate Slurry (SL)", hazard: "DAMAGING", nomP: 500, nomT: 85 },
+            { name: "Phosphate Rock Slurry (SL*)", hazard: "MILD", nomP: 450, nomT: 45 }
+        ]
+    },
+    {
+        code: "0R2", area: "PHOS",
+        name: "0R2 - Acidic Waste / Phos Acid / Slurry / Process Water (FRP 125#)",
+        mat: "FRP (Vinyl Ester Resin Hetron 980)", rating: "125 LB (Drilled CL150)", ratingClass: 150,
+        designP: 700, designT: 100, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B8M Class 2 w/ Washer", nutSpec: "ASTM A194 Gr 8M", defaultBoltType: "B8M_CL2",
+        gasket: "Butyl Rubber Gasket (V#2010, 3.0mm / 4.8mm DN650+)", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: true, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Phosphoric Acid (PH) / Acidic Waste (WA) / HH Slurry", hazard: "DAMAGING", nomP: 450, nomT: 80 },
+            { name: "Recovery Water (WR) / Process Water (PW) / Rock Slurry", hazard: "MILD", nomP: 450, nomT: 50 }
+        ]
+    },
+    {
+        code: "0R3", area: "PHOS",
+        name: "0R3 - Vent Gas Ducting & Piping (FRP BS 6464)",
+        mat: "FRP (Vinyl Ester Resin Hetron 922)", rating: "BS 6464 / AS 2634", ratingClass: 150,
+        designP: 50, designT: 75, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B8M Class 2 w/ Washer", nutSpec: "ASTM A194 Gr 8M", defaultBoltType: "B8M_CL2",
+        gasket: "Butyl Rubber Full Face (V#2010)", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: true, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Vent Gas (W)", hazard: "DAMAGING", nomP: 20, nomT: 60 }
+        ]
+    },
+    {
+        code: "0R4", area: "PHOS",
+        name: "0R4 - Pond Water / Recovery Water / Acidic Waste (FRP 125#)",
+        mat: "FRP (Vinyl Ester Resin Hetron 922)", rating: "125 LB (Drilled CL150)", ratingClass: 150,
+        designP: 700, designT: 60, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B8M Class 2 w/ Washer", nutSpec: "ASTM A194 Gr 8M", defaultBoltType: "B8M_CL2",
+        gasket: "Butyl Rubber Full Face (V#2010)", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: true, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Pond Water (WP) / Acidic Waste Water (WA)", hazard: "DAMAGING", nomP: 450, nomT: 45 },
+            { name: "Recovery Water (WR)", hazard: "MILD", nomP: 450, nomT: 40 }
+        ]
+    },
+    {
+        code: "1A4", area: "PHOS",
+        name: "1A4 - Process Water / Fire Water / Chemical (CS 125/150#)",
+        mat: "Carbon Steel (ASTM A106 Gr B / A53 Gr B)", rating: "125 LB (CL150)", ratingClass: 150,
+        designP: 700, designT: 60, corr: "1.3 mm",
+        boltSpec: "ASTM A193 Gr B7", nutSpec: "ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "Non-Asbestos Flat Ring (Garlock Blue-Gard 3200)", gasketThk: 1.6,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Process Water (PW) / Fire Water (FW) / Recovery Water", hazard: "MILD", nomP: 600, nomT: 40 },
+            { name: "Chemical Service (CH)", hazard: "DAMAGING", nomP: 500, nomT: 40 }
+        ]
+    },
+    {
+        code: "1A5", area: "PHOS",
+        name: "1A5 - Plant Air (CS 150#)",
+        mat: "Carbon Steel (ASTM A106 Gr B / A53 Gr B)", rating: "150 LB", ratingClass: 150,
+        designP: 900, designT: 60, corr: "1.3 mm",
+        boltSpec: "ASTM A193 Gr B7", nutSpec: "ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "Spiral Wound 304SS & Non-Asbestos w/ CS Outer Ring (V#8591)", gasketThk: 4.5,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: true,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Plant Air (PA)", hazard: "MILD", nomP: 750, nomT: 40 }
+        ]
+    },
+    {
+        code: "1A6", area: "PHOS",
+        name: "1A6 - LP Steam / LP Condensate (CS / 317L SS 150#)",
+        mat: "Carbon Steel (or 317L SS at Steam Sparger)", rating: "150 LB", ratingClass: 150,
+        designP: 650, designT: 230, corr: "1.3 mm (0.8 mm SS)",
+        boltSpec: "ASTM A193 Gr B7 (CS) / Gr B8M Cl 2 (SS)", nutSpec: "ASTM A194 Gr 2H / Gr 8M", defaultBoltType: "B7",
+        gasket: "Spiral Wound 304SS & Non-Asbestos w/ CS Outer Ring (V#8591)", gasketThk: 4.5,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: true,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Low Pressure Steam (LS) (>150°C)", hazard: "DAMAGING", nomP: 500, nomT: 165 },
+            { name: "Low Pressure Condensate (LC) (≤150°C)", hazard: "DAMAGING", nomP: 400, nomT: 115 }
+        ]
+    },
+    {
+        code: "1A7", area: "PHOS",
+        name: "1A7 - Sulphuric Acid 98% (CS / 316L SS 150#)",
+        mat: "Carbon Steel (or 316L SS at Flow Meter / Mixer)", rating: "150 LB", ratingClass: 150,
+        designP: 600, designT: 70, corr: "3.0 mm (0.8 mm SS)",
+        boltSpec: "ASTM A193 Gr B7 (or Gr B8M Cl 2 on SS)", nutSpec: "ASTM A194 Gr 2H / 8M", defaultBoltType: "B7",
+        gasket: "4.5mm Spiral Wound Alloy 20 & PTFE w/ Inner & Outer Ring (V#7596) / TopChem 2005", gasketThk: 4.5,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: true,
+        guard: "Mandatory (Teflon Ramco Spra-Gard)", ammoniaBL: false,
+        services: [
+            { name: "Sulphuric Acid 98% (SA)", hazard: "TOXIC", nomP: 500, nomT: 50 }
+        ]
+    },
+    {
+        code: "1B2", area: "PHOS",
+        name: "1B2 - Instrument Air / Potable Water (CS Galv 150#)",
+        mat: "Galvanised Carbon Steel (ASTM A53 Gr B)", rating: "150 LB", ratingClass: 150,
+        designP: 900, designT: 60, corr: "1.3 mm",
+        boltSpec: "ASTM A193 Gr B7 Galv", nutSpec: "ASTM A194 Gr 2H Galv", defaultBoltType: "B7",
+        gasket: "Non-Asbestos Flat Ring (Garlock Blue-Gard 3000)", gasketThk: 1.6,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Instrument Air (IA)", hazard: "MILD", nomP: 750, nomT: 35 },
+            { name: "Potable Water (PO)", hazard: "MILD", nomP: 550, nomT: 35 }
+        ]
+    },
+    {
+        code: "1D5", area: "PHOS",
+        name: "1D5 - Chemical / LP Condensate / Acidic Waste / Water (316L SS 150#)",
+        mat: "316L Stainless Steel (ASTM A312 TP316L)", rating: "150 LB", ratingClass: 150,
+        designP: 1100, designT: 163, corr: "0.8 mm",
+        boltSpec: "ASTM A193 Gr B7 (or Gr B8M Cl 2)", nutSpec: "ASTM A194 Gr 2H / 8M", defaultBoltType: "B7",
+        gasket: "PTFE Enveloped Gasket w/ Non-Asbestos Insert (V#7030N) / TopChem 2005", gasketThk: 3.2,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Chemical (CH) / Acidic Waste Water (WA)", hazard: "DAMAGING", nomP: 650, nomT: 70 },
+            { name: "Low Pressure Condensate (LC)", hazard: "DAMAGING", nomP: 500, nomT: 120 },
+            { name: "Process Water (PW) / Recovery Water (WR)", hazard: "MILD", nomP: 650, nomT: 45 }
+        ]
+    },
+    {
+        code: "1D13_PHOS", area: "PHOS",
+        name: "1D13 - Water & Air Utility Services (316L SS Viega Sanpress 150#)",
+        mat: "316L Stainless Steel (Viega Sanpress Inox 1.4401)", rating: "150 LB", ratingClass: 150,
+        designP: 1600, designT: 110, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B7 Galv (Touched up after tightening)", nutSpec: "ASTM A194 Gr 2H Galv", defaultBoltType: "B7",
+        gasket: "Spiral Wound 316SS w/ Graphite Filler, Inner & Outer Ring", gasketThk: 3.2,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: true,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Process / Fire / Potable / Gland Water", hazard: "MILD", nomP: 700, nomT: 40 },
+            { name: "Plant Air / Instrument Air", hazard: "MILD", nomP: 750, nomT: 40 }
+        ]
+    },
+    {
+        code: "1F1", area: "PHOS",
+        name: "1F1 - Hemihydrate Slurry / Phos Acid / Pond Water (Uranus 52N+ 150#)",
+        mat: "Uranus 52N+ (or 316L SS at Reactor Drain)", rating: "150 LB", ratingClass: 150,
+        designP: 750, designT: 132, corr: "0.8 mm",
+        boltSpec: "ASTM A193 Gr B8M Class 2 (Spec: B8 / Site Std: B8M Cl 2)", nutSpec: "ASTM A194 Gr 8M", defaultBoltType: "B8M_CL2",
+        gasket: "Butyl Rubber Gasket", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Hemihydrate Slurry (SL) / Phosphoric Acid (PH)", hazard: "DAMAGING", nomP: 550, nomT: 98 },
+            { name: "Pond Water (WP)", hazard: "DAMAGING", nomP: 500, nomT: 55 }
+        ]
+    },
+    {
+        code: "1F2", area: "PHOS",
+        name: "1F2 - HH Slurry / Phos Acid / Pond Water / 98% Sulphuric Acid (SAF 2507 Sch40 150#)",
+        mat: "Super Duplex SAF 2507 (UNS S32750 Sch 40S/80S)", rating: "150 LB", ratingClass: 150,
+        designP: 750, designT: 132, corr: "0.8 mm",
+        boltSpec: "ASTM A193 Gr B8M Class 2 (Spec: B8 / Site Std: B8M Cl 2)", nutSpec: "ASTM A194 Gr 8M", defaultBoltType: "B8M_CL2",
+        gasket: "3.0mm Butyl Rubber OR 4.5mm Spiral Wound CRIR S32750/ePTFE", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Service Dependent (Mandatory on 98% SA)", ammoniaBL: false,
+        services: [
+            { name: "Hemihydrate Slurry (SL) / Phosphoric Acid (PH) (Butyl Gasket)", hazard: "DAMAGING", nomP: 550, nomT: 98, rubberOverride: true, guardOverride: "Not Required" },
+            { name: "Hemihydrate Slurry / Phos Acid (High-Freq Cleaning - SWG CRIR ePTFE)", hazard: "DAMAGING", nomP: 550, nomT: 98, rubberOverride: false, gasketOverride: "4.5mm Spiral Wound Type CRIR 316L-S32750/ePTFE", thkOverride: 4.5, guardOverride: "Not Required" },
+            { name: "Sulphuric Acid 98% (SA) (SWG ePTFE + Spra-Gard)", hazard: "TOXIC", nomP: 550, nomT: 65, rubberOverride: false, gasketOverride: "4.5mm Spiral Wound Type CRIR S32750/ePTFE", thkOverride: 4.5, guardOverride: "Mandatory (Teflon Ramco Spra-Gard)" },
+            { name: "Pond Water (WP)", hazard: "MILD", nomP: 500, nomT: 50, rubberOverride: true, guardOverride: "Not Required" }
+        ]
+    },
+    {
+        code: "1F3", area: "PHOS",
+        name: "1F3 - Hemihydrate Slurry / Phos Acid / Pond Water (Alloy 31 150#)",
+        mat: "Alloy 31 (UNS N08031)", rating: "150 LB", ratingClass: 150,
+        designP: 750, designT: 132, corr: "0.8 mm",
+        boltSpec: "ASTM A193 Alloy 31 / Gr B8M Class 2", nutSpec: "ASTM A194 Alloy 31 / Gr 8M", defaultBoltType: "B8M_CL2",
+        gasket: "Butyl Rubber Gasket", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Hemihydrate Slurry (SL) / Phosphoric Acid (PH)", hazard: "DAMAGING", nomP: 550, nomT: 98 },
+            { name: "Pond Water (WP)", hazard: "MILD", nomP: 500, nomT: 50 }
+        ]
+    },
+    {
+        code: "1F4", area: "PHOS",
+        name: "1F4 - Pond Water (SAF 2205 Duplex 150#)",
+        mat: "Duplex Stainless Steel SAF 2205 (UNS S32205)", rating: "150 LB", ratingClass: 150,
+        designP: 750, designT: 132, corr: "0.8 mm",
+        boltSpec: "ASTM A193 Gr B8M Class 2", nutSpec: "ASTM A194 Gr 8M", defaultBoltType: "B8M_CL2",
+        gasket: "Butyl Rubber Gasket", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Pond Water (WP)", hazard: "MILD", nomP: 550, nomT: 50 }
+        ]
+    },
+    {
+        code: "1F5", area: "PHOS",
+        name: "1F5 - Phosphoric Acid / Process Gas (SAF 2507 Sch10S 150#)",
+        mat: "Super Duplex SAF 2507 (UNS S32750 Sch 10S)", rating: "150 LB", ratingClass: 150,
+        designP: 750, designT: 132, corr: "0.8 mm",
+        boltSpec: "ASTM A193 Gr B8M Class 2", nutSpec: "ASTM A194 Gr 8M", defaultBoltType: "B8M_CL2",
+        gasket: "Butyl Rubber Gasket", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Phosphoric Acid (PH)", hazard: "DAMAGING", nomP: 550, nomT: 95 },
+            { name: "Process Gas (PG)", hazard: "DAMAGING", nomP: 200, nomT: 85 }
+        ]
+    },
+    {
+        code: "1F6_PHOS", area: "PHOS",
+        name: "1F6 - Process Gas (SAF 2507 150#)",
+        mat: "Super Duplex SAF 2507 (UNS S32750)", rating: "150 LB", ratingClass: 150,
+        designP: 280, designT: 98, corr: "0.8 mm",
+        boltSpec: "ASTM A193 Gr B8M Class 2", nutSpec: "ASTM A194 Gr 8M", defaultBoltType: "B8M_CL2",
+        gasket: "Butyl Rubber Gasket", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Process Gas (PG)", hazard: "DAMAGING", nomP: 150, nomT: 85 }
+        ]
+    },
+    {
+        code: "1Q8", area: "PHOS",
+        name: "1Q8 - Process / Potable / Acidic Waste Water (HDPE PE100 PN16 150#)",
+        mat: "HDPE PE100 PN16 w/ 316L SS Backing Flange", rating: "150 LB", ratingClass: 150,
+        designP: 1600, designT: 70, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B8M Class 2", nutSpec: "ASTM A194 Gr 8M", defaultBoltType: "B8M_CL2",
+        gasket: "Butyl Rubber Gasket", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: true, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Process Water (PW) / Potable Water (PO) / Recovery Water", hazard: "MILD", nomP: 750, nomT: 35 },
+            { name: "Acidic Waste Water (WA)", hazard: "DAMAGING", nomP: 650, nomT: 40 }
+        ]
+    },
+    {
+        code: "1Q12", area: "PHOS",
+        name: "1Q12 - PAP Recycle / Process / Potable Water (HDPE PE100 PN10 150#)",
+        mat: "HDPE PE100 PN10 w/ Galv CS Backing Flange", rating: "150 LB", ratingClass: 150,
+        designP: 833, designT: 70, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B8M Class 2", nutSpec: "ASTM A194 Gr 8M", defaultBoltType: "B8M_CL2",
+        gasket: "Klingersil C4500 Ring Gasket", gasketThk: 1.5,
+        isRubberGasket: false, isNonMetallicFlange: true, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "PAP Recycle Water / Process Water / Potable Water", hazard: "MILD", nomP: 600, nomT: 35 }
+        ]
+    },
+    {
+        code: "1Q13", area: "PHOS",
+        name: "1Q13 - PAP Recycle / Process / Potable Water (HDPE PE100 PN12.5 150#)",
+        mat: "HDPE PE100 PN12.5 w/ 316SS Backing Ring (in PAP) or Galv CS", rating: "150 LB", ratingClass: 150,
+        designP: 1226, designT: 70, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B8M Class 2", nutSpec: "ASTM A194 Gr 8M", defaultBoltType: "B8M_CL2",
+        gasket: "1.5mm Ring Type Klingersil C4500", gasketThk: 1.5,
+        isRubberGasket: false, isNonMetallicFlange: true, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "PAP Recycle Water / Process Water / Potable Water", hazard: "MILD", nomP: 700, nomT: 35 }
+        ]
+    },
+    {
+        code: "1R1", area: "PHOS",
+        name: "1R1 - Process Gas (FRP Hetron 980 BS 6464)",
+        mat: "FRP (Vinyl Ester Resin Hetron 980)", rating: "BS 6464 / AS 2634", ratingClass: 150,
+        designP: 79, designT: 75, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B7 w/ Washer", nutSpec: "ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "Butyl Rubber Full Face (V#2010)", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: true, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Process Gas (PG)", hazard: "DAMAGING", nomP: 50, nomT: 65 }
+        ]
+    },
+    {
+        code: "1T1", area: "PHOS",
+        name: "1T1 - Hemihydrate Slurry (CS + 4mm Butyl Rubber + 65mm Carbon Brick 150#)",
+        mat: "Carbon Steel + 4mm Butyl Rubber Lining + 65mm Carbon Brick", rating: "150 LB", ratingClass: 150,
+        designP: 750, designT: 107, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B7", nutSpec: "ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "Butyl Rubber Gasket", gasketThk: 3.2,
+        isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: true, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Hemihydrate Slurry (SL)", hazard: "DAMAGING", nomP: 550, nomT: 98 }
+        ]
+    },
+
+    // ================= BENEFICIATION PLANT (21-D-DB-4000) =================
+    {
+        code: "A", area: "BENE",
+        name: "Class A - LP Process Water / Raw Water (CS ERW 125#)",
+        mat: "Carbon Steel ERW (AS 1074 / ASTM A106 Gr B)", rating: "ANSI 125 lb", ratingClass: 150,
+        designP: 700, designT: 50, corr: "1.5 mm",
+        boltSpec: "AS1111 Gr 4.6 ZP / ASTM A193 Gr B7", nutSpec: "AS1112 Gr 5 / ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "Natural or Reinforced Rubber Gasket on Flat Faces", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Process Water (PW) / Raw Water (RW)", hazard: "MILD", nomP: 550, nomT: 35 }
+        ]
+    },
+    {
+        code: "AH", area: "BENE",
+        name: "Class AH - MP Slurry / Gland Water / Process Water (CS Heavy 125#)",
+        mat: "Carbon Steel Heavy Wt / Extra Strong (AS 1074 / A106 Gr B)", rating: "ANSI 125 lb", ratingClass: 150,
+        designP: 1400, designT: 50, corr: "1.5 mm",
+        boltSpec: "ASTM A193 Gr B7 / AS1111 Gr 4.6", nutSpec: "ASTM A194 Gr 2H / AS1112 Gr 5", defaultBoltType: "B7",
+        gasket: "Natural or Reinforced Rubber Gasket on Flat Faces", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Slurry (SL) / Gland Water (GW) / Process Water (≤1035 kPa)", hazard: "MILD", nomP: 850, nomT: 35 },
+            { name: "High-Pressure Slurry / Gland Water (>1035 kPa)", hazard: "MILD", nomP: 1250, nomT: 35 }
+        ]
+    },
+    {
+        code: "AR", area: "BENE",
+        name: "Class AR - Cyclone & Slurry Lines (CS 6mm Rubber Lined 125#)",
+        mat: "Carbon Steel w/ 6mm Natural Rubber Lining (3mm on Flange Face)", rating: "ANSI 125 lb", ratingClass: 150,
+        designP: 700, designT: 50, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B7 / AS1111 Gr 4.6", nutSpec: "ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "Integral 3mm Natural Rubber Flange Face + Full Face Soft Rubber (≤50 Shore A)", gasketThk: 3.2,
+        isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: true, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Phosphate Rock Slurry (SL)", hazard: "MILD", nomP: 500, nomT: 35 }
+        ]
+    },
+    {
+        code: "B", area: "BENE",
+        name: "Class B - Air / Fire Water / Potable / Gland Water (Galv CS 125#)",
+        mat: "Galvanised Carbon Steel (AS 1074)", rating: "ANSI 125 lb", ratingClass: 150,
+        designP: 750, designT: 30, corr: "1.5 mm",
+        boltSpec: "ASTM A193 Gr B7 Galv / AS1111 Gr 4.6 ZP", nutSpec: "ASTM A194 Gr 2H Galv", defaultBoltType: "B7",
+        gasket: "Flat Face Neoprene Insertion Rubber", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Plant & Instrument Air / Fire / Potable / Gland / Raw Water", hazard: "MILD", nomP: 650, nomT: 30 }
+        ]
+    },
+    {
+        code: "1D10", area: "BENE",
+        name: "1D10 - Raw Water / Chemical (316L SS 150#)",
+        mat: "316L Stainless Steel (ASTM A312 TP316L)", rating: "Class 150", ratingClass: 150,
+        designP: 1400, designT: 50, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B7 (or Gr B8M Cl 2)", nutSpec: "ASTM A194 Gr 2H", defaultBoltType: "B7",
+        gasket: "1.5mm Ring Type Klingersil C4500", gasketThk: 1.5,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Raw Water (RW)", hazard: "MILD", nomP: 700, nomT: 35 },
+            { name: "Chemical Service (CH)", hazard: "DAMAGING", nomP: 600, nomT: 35 }
+        ]
+    },
+    {
+        code: "1D13_BENE", area: "BENE",
+        name: "1D13 - Water & Air Utility Services (316L SS Viega Sanpress 150#)",
+        mat: "316L Stainless Steel (Viega Sanpress Inox 1.4401)", rating: "150 LB", ratingClass: 150,
+        designP: 1600, designT: 110, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B7 Galv (Touched up after tightening)", nutSpec: "ASTM A194 Gr 2H Galv", defaultBoltType: "B7",
+        gasket: "Spiral Wound 316SS w/ Graphite Filler, Inner & Outer Ring", gasketThk: 3.2,
+        isRubberGasket: false, isNonMetallicFlange: false, isRubberLined: false, isHardGasket: true,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Process / Fire / Potable / Gland Water", hazard: "MILD", nomP: 700, nomT: 35 },
+            { name: "Plant Air / Instrument Air", hazard: "MILD", nomP: 750, nomT: 35 }
+        ]
+    },
+    {
+        code: "S", area: "BENE",
+        name: "Class S - Underground Fire Water (ABS Solvent Welded 150#)",
+        mat: "ABS Class 12/15 (AS 3518) w/ Galv Backing Rings", rating: "ANSI 150 lb", ratingClass: 150,
+        designP: 700, designT: 30, corr: "0.0 mm",
+        boltSpec: "Galvanised Steel Bolts / ASTM A193 Gr B7 Galv", nutSpec: "Galvanised Nuts / 2H", defaultBoltType: "B7",
+        gasket: "Natural or Reinforced Insertion Rubber", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: true, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Underground Fire Water (FW)", hazard: "MILD", nomP: 650, nomT: 30 }
+        ]
+    },
+    {
+        code: "Q", area: "BENE",
+        name: "Class Q (Q1-Q3) - Slurry / Bore / Potable Water (HDPE PE80B 125/150#)",
+        mat: "Polyethylene PE80B w/ Galv Backing Rings", rating: "ANSI 125/150 lb", ratingClass: 150,
+        designP: 700, designT: 45, corr: "0.0 mm",
+        boltSpec: "Galvanised Steel Bolts / ASTM A193 Gr B7 Galv", nutSpec: "Galvanised Nuts / 2H", defaultBoltType: "B7",
+        gasket: "Natural or Reinforced Insertion Rubber", gasketThk: 3.0,
+        isRubberGasket: true, isNonMetallicFlange: true, isRubberLined: false, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Slurry (SL) / Potable (PO) / Return (RW) / Bore Water (WW)", hazard: "MILD", nomP: 550, nomT: 35 }
+        ]
+    },
+    {
+        code: "H", area: "BENE",
+        name: "Class H - Sump & Pump Slurry (Flexible Rubber Hose 125/150#)",
+        mat: "Flexible Rubber Hose w/ Muff Coupling Flanges", rating: "ANSI 125/150 lb", ratingClass: 150,
+        designP: 1400, designT: 50, corr: "0.0 mm",
+        boltSpec: "ASTM A193 Gr B7 Galv / AS1111 Gr 4.6", nutSpec: "ASTM A194 Gr 2H Galv", defaultBoltType: "B7",
+        gasket: "Integral Rubber Hose Flange Face", gasketThk: 3.2,
+        isRubberGasket: true, isNonMetallicFlange: false, isRubberLined: true, isHardGasket: false,
+        guard: "Not Required", ammoniaBL: false,
+        services: [
+            { name: "Phosphate Rock Slurry / Sump Lines (≤1035 kPa)", hazard: "MILD", nomP: 750, nomT: 35 },
+            { name: "Slurry Pump Discharge (>1035 kPa)", hazard: "MILD", nomP: 1200, nomT: 35 }
+        ]
+    }
+];
+
+// ============================================================================
+// 2. BOLT DIMENSIONS BY FLANGE RATING (ASME B16.5 CLASS 150/125 vs CLASS 300)
+// ============================================================================
+const boltDimTable150 = {
+    "15":  { dia: "1/2",   count: 4 },
+    "20":  { dia: "1/2",   count: 4 },
+    "25":  { dia: "1/2",   count: 4 },
+    "40":  { dia: "1/2",   count: 4 },
+    "50":  { dia: "5/8",   count: 4 },
+    "65":  { dia: "5/8",   count: 4 },
+    "80":  { dia: "5/8",   count: 4 },
+    "100": { dia: "5/8",   count: 8 },
+    "150": { dia: "3/4",   count: 8 },
+    "200": { dia: "3/4",   count: 8 },
+    "250": { dia: "7/8",   count: 12 },
+    "300": { dia: "7/8",   count: 12 },
+    "350": { dia: "1",     count: 12 },
+    "400": { dia: "1",     count: 16 },
+    "450": { dia: "1 1/8", count: 16 },
+    "500": { dia: "1 1/8", count: 20 },
+    "600": { dia: "1 1/4", count: 20 }
+};
+
+const boltDimTable300 = {
+    "15":  { dia: "1/2",   count: 4 },
+    "20":  { dia: "5/8",   count: 4 },
+    "25":  { dia: "5/8",   count: 4 },
+    "40":  { dia: "3/4",   count: 4 },
+    "50":  { dia: "5/8",   count: 8 },
+    "65":  { dia: "3/4",   count: 8 },
+    "80":  { dia: "3/4",   count: 8 },
+    "100": { dia: "3/4",   count: 8 },
+    "150": { dia: "3/4",   count: 12 },
+    "200": { dia: "7/8",   count: 12 },
+    "250": { dia: "1",     count: 16 },
+    "300": { dia: "1 1/8", count: 16 },
+    "350": { dia: "1 1/8", count: 20 },
+    "400": { dia: "1 1/4", count: 20 },
+    "450": { dia: "1 1/4", count: 24 },
+    "500": { dia: "1 1/4", count: 24 },
+    "600": { dia: "1 1/2", count: 24 }
+};
+
+// ============================================================================
+// 3. APPENDIX E (TABLE F-1) STANDARD BOLT TORQUE VALUES (DOC 38847)
+// ============================================================================
+const torqueData = {
+    "1/2":   { B7_nickel: { ft: 40,    nm: 55 },    B7_blue: { ft: 25,    nm: 35 },    B8M_CL1: { ft: 11,   nm: 15 },   B8M_CL2: { ft: 38,  nm: 51 } },
+    "5/8":   { B7_nickel: { ft: 80,    nm: 110 },   B7_blue: { ft: 50,    nm: 70 },    B8M_CL1: { ft: 22,   nm: 30 },   B8M_CL2: { ft: 77,  nm: 105 } },
+    "3/4":   { B7_nickel: { ft: 145,   nm: 195 },   B7_blue: { ft: 90,    nm: 125 },   B8M_CL1: { ft: 40,   nm: 55 },   B8M_CL2: { ft: 133, nm: 180 } },
+    "7/8":   { B7_nickel: { ft: 230,   nm: 310 },   B7_blue: { ft: 145,   nm: 195 },   B8M_CL1: { ft: 64,   nm: 90 },   B8M_CL2: { ft: 173, nm: 235 } },
+    "1":     { B7_nickel: { ft: 345,   nm: 470 },   B7_blue: { ft: 220,   nm: 300 },   B8M_CL1: { ft: 97,   nm: 135 },  B8M_CL2: { ft: 258, nm: 350 } },
+    "1 1/8": { B7_nickel: { ft: 500,   nm: 680 },   B7_blue: { ft: 320,   nm: 435 },   B8M_CL1: { ft: 142,  nm: 195 },  B8M_CL2: { ft: 310, nm: 420 } },
+    "1 1/4": { B7_nickel: { ft: 700,   nm: 950 },   B7_blue: { ft: 450,   nm: 610 },   B8M_CL1: { ft: 201,  nm: 275 },  B8M_CL2: { ft: 435, nm: 590 } },
+    "1 3/8": { B7_nickel: { ft: 945,   nm: 1280 },  B7_blue: { ft: 610,   nm: 830 },   B8M_CL1: { ft: 273,  nm: 370 },  B8M_CL2: { ft: 454, nm: 615 } },
+    "1 1/2": { B7_nickel: { ft: 1240,  nm: 1680 },  B7_blue: { ft: 805,   nm: 1100 },  B8M_CL1: { ft: 361,  nm: 490 },  B8M_CL2: { ft: 601, nm: 815 } },
+    "1 5/8": { B7_nickel: { ft: 1600,  nm: 2170 },  B7_blue: { ft: 1040,  nm: 1410 },  B8M_CL1: { ft: 466,  nm: 635 },  B8M_CL2: null },
+    "1 3/4": { B7_nickel: { ft: 2015,  nm: 2730 },  B7_blue: { ft: 1315,  nm: 1785 },  B8M_CL1: { ft: 590,  nm: 800 },  B8M_CL2: null },
+    "1 7/8": { B7_nickel: { ft: 2500,  nm: 3390 },  B7_blue: { ft: 1635,  nm: 2220 },  B8M_CL1: { ft: 733,  nm: 995 },  B8M_CL2: null },
+    "2":     { B7_nickel: { ft: 3050,  nm: 4135 },  B7_blue: { ft: 2005,  nm: 2720 },  B8M_CL1: { ft: 899,  nm: 1220 }, B8M_CL2: null },
+    "2 1/4": { B7_nickel: { ft: 4375,  nm: 5930 },  B7_blue: { ft: 2900,  nm: 3935 },  B8M_CL1: { ft: 1301, nm: 1765 }, B8M_CL2: null },
+    "2 1/2": { B7_nickel: { ft: 6045,  nm: 8195 },  B7_blue: { ft: 3520,  nm: 4775 },  B8M_CL1: { ft: 1746, nm: 2370 }, B8M_CL2: null },
+    "2 3/4": { B7_nickel: { ft: 7335,  nm: 9945 },  B7_blue: { ft: 4905,  nm: 6645 },  B8M_CL1: { ft: 2431, nm: 3300 }, B8M_CL2: null },
+    "3":     { B7_nickel: { ft: 9555,  nm: 12955 }, B7_blue: { ft: 6420,  nm: 8705 },  B8M_CL1: { ft: 3184, nm: 4320 }, B8M_CL2: null },
+    "3 1/4": { B7_nickel: { ft: 12200, nm: 16545 }, B7_blue: { ft: 8220,  nm: 11145 }, B8M_CL1: { ft: 4078, nm: 5530 }, B8M_CL2: null },
+    "3 1/2": { B7_nickel: { ft: 15180, nm: 20585 }, B7_blue: { ft: 10280, nm: 13940 }, B8M_CL1: { ft: 5100, nm: 6915 }, B8M_CL2: null }
+};
+
+// ============================================================================
+// 4. APPENDIX B BOLT TIGHTENING SEQUENCES
+// ============================================================================
+const appendixBSequences = {
+    4:  [1, 3, 2, 4],
+    8:  [1, 8, 4, 6, 2, 7, 3, 5],
+    12: [1, 5, 9, 3, 7, 11, 2, 6, 10, 4, 8, 12],
+    16: [1, 9, 5, 13, 3, 11, 7, 15, 2, 10, 6, 14, 4, 12, 8, 16],
+    20: [1, 13, 5, 17, 9, 3, 15, 7, 19, 11, 2, 14, 6, 18, 10, 4, 16, 8, 20, 12],
+    24: [1, 9, 17, 5, 13, 21, 3, 11, 19, 7, 15, 23, 2, 10, 18, 6, 14, 22, 4, 12, 20, 8, 16, 24]
+};
+
+// ============================================================================
+// 5. UI INITIALIZATION & EVENT HANDLERS
+// ============================================================================
+function updateSpecDropdown() {
+    const area = document.getElementById("plantArea").value;
+    const specSelect = document.getElementById("pipeSpec");
+    specSelect.innerHTML = "";
+
+    specsCatalog.forEach(item => {
+        if (area === "ALL" || item.area === area) {
+            const opt = document.createElement("option");
+            opt.value = item.code;
+            opt.innerText = `[${item.area}] ${item.name}`;
+            specSelect.appendChild(opt);
+        }
+    });
+
+    onSpecChange();
+}
+
+function onSpecChange() {
+    const specCode = document.getElementById("pipeSpec").value;
+    const specInfo = specsCatalog.find(s => s.code === specCode);
+    if (!specInfo) return;
+
+    const srvSelect = document.getElementById("fluidService");
+    srvSelect.innerHTML = "";
+    specInfo.services.forEach((srv, idx) => {
+        const opt = document.createElement("option");
+        opt.value = idx;
+        opt.innerText = srv.name;
+        srvSelect.appendChild(opt);
+    });
+
+    document.getElementById("chkAmmoniaBL").checked = !!specInfo.ammoniaBL;
+    onServiceChange();
+}
+
+function onServiceChange() {
+    applyOperatingPreset('nominal');
+}
+
+function applyOperatingPreset(mode) {
+    const specCode = document.getElementById("pipeSpec").value;
+    const srvIdx = parseInt(document.getElementById("fluidService").value) || 0;
+    const specInfo = specsCatalog.find(s => s.code === specCode);
+    if (!specInfo) return;
+    const srv = specInfo.services[srvIdx] || specInfo.services[0];
+
+    if (mode === 'design') {
+        document.getElementById("opPress").value = specInfo.designP;
+        document.getElementById("opTemp").value = specInfo.designT;
+    } else {
+        document.getElementById("opPress").value = srv.nomP;
+        document.getElementById("opTemp").value = srv.nomT;
+    }
+    calculateFlange();
+}
+
+// ============================================================================
+// 6. CORE CALCULATION & DOC 38847 SECTION 5 CLASSIFICATION ENGINE
+// ============================================================================
+function calculateFlange() {
+    const specCode = document.getElementById("pipeSpec").value;
+    const srvIdx = parseInt(document.getElementById("fluidService").value) || 0;
+    const size = parseInt(document.getElementById("nominalSize").value);
+    const lub = document.getElementById("lubricant").value;
+    const boltOverride = document.getElementById("boltOverride").value;
+    const rubberRuleMode = document.getElementById("rubberRuleMode").value;
+
+    const specInfo = specsCatalog.find(s => s.code === specCode);
+    if (!specInfo) return;
+    const srv = specInfo.services[srvIdx] || specInfo.services[0];
+
+    const opPress = parseFloat(document.getElementById("opPress").value) || 0;
+    const opTemp = parseFloat(document.getElementById("opTemp").value) || 0;
+
+    const chkAmmoniaBL = document.getElementById("chkAmmoniaBL").checked;
+    const chkHeatExchanger = document.getElementById("chkHeatExchanger").checked;
+    const chkProblematic = document.getElementById("chkProblematic").checked;
+    const chkTensioning = document.getElementById("chkTensioning").checked;
+    const chkDesignedFlange = document.getElementById("chkDesignedFlange").checked;
+    const chkRTJ = document.getElementById("chkRTJ").checked;
+
+    const isRubberGasket = (srv.rubberOverride !== undefined) ? srv.rubberOverride : specInfo.isRubberGasket;
+    const gasketName = srv.gasketOverride || specInfo.gasket;
+    const gasketThk = srv.thkOverride || specInfo.gasketThk;
+    const guardText = srv.guardOverride || specInfo.guard;
+
+    const effectiveClass = (specInfo.code === "3D1" && size <= 50) ? 150 : specInfo.ratingClass;
+    const bDim = (effectiveClass === 300)
+        ? (boltDimTable300[size.toString()] || { dia: "3/4", count: 8 })
+        : (boltDimTable150[size.toString()] || { dia: "5/8", count: 4 });
+
+    const chosenBoltType = (boltOverride === "AUTO") ? specInfo.defaultBoltType : boltOverride;
+    let torqueKey = "B7_nickel";
+    let displayBoltGrade = specInfo.boltSpec;
+
+    if (chosenBoltType === "B8M_CL2") {
+        torqueKey = "B8M_CL2";
+        if (boltOverride !== "AUTO") displayBoltGrade = "ASTM A193 Gr B8M Class 2 (Strain Hardened)";
+    } else if (chosenBoltType === "B8M_CL1") {
+        torqueKey = "B8M_CL1";
+        displayBoltGrade = "ASTM A193 Gr B8/B8M Class 1 (Unstrained)";
+    } else {
+        if (lub === "blue") {
+            torqueKey = "B7_blue";
+            displayBoltGrade = "ASTM A193 Gr B7 (Fluoropolymer Coated Blue)";
+        } else {
+            torqueKey = "B7_nickel";
+            if (boltOverride !== "AUTO") displayBoltGrade = "ASTM A193 Gr B7 / A320 Gr L7";
+        }
+    }
+
+    const torqueObj = (torqueData[bDim.dia] && torqueData[bDim.dia][torqueKey])
+        ? torqueData[bDim.dia][torqueKey]
+        : { nm: 195, ft: 145 };
+
+    // Evaluate all 8 Level 3 Triggers (Doc 38847 Section 5 - ANY 1 condition applies)
+    const l3Checks = [
+        { label: "1. Within Ammonia Plant Battery Limits", trig: chkAmmoniaBL },
+        { label: "2. Fluid Service Highly Toxic to Human Tissue", trig: srv.hazard === "TOXIC" },
+        { label: "3. Fluid Service is Flammable", trig: srv.hazard === "FLAMMABLE" },
+        { label: "4. Operating Pressure > 1035 kPa", trig: opPress > 1035, detail: `${opPress} kPa` },
+        { label: "5. Operating Temperature > 150°C", trig: opTemp > 150, detail: `${opTemp} °C` },
+        { label: "6. Heat Exchanger Channel Head / Tube Sheet", trig: chkHeatExchanger },
+        { label: "7. Joint Identified as Problematic", trig: chkProblematic },
+        { label: "8. Joint Requires Stud Tensioning Equipment", trig: chkTensioning }
+    ];
+
+    const triggeredL3 = l3Checks.filter(c => c.trig);
+
+    // Evaluate Level 1 Criteria (Section 5.1)
+    const isMildFluid = (srv.hazard === "MILD");
+    const isPressL1 = (opPress <= 1035);
+    const isTempL1 = (opTemp <= 90);
+    const isNotAmmonia = !chkAmmoniaBL;
+    const meetsAll4MildCriteria = isMildFluid && isPressL1 && isTempL1 && isNotAmmonia;
+
+    const rubberQualifiesL1 = (rubberRuleMode === "strict")
+        ? isRubberGasket
+        : (isRubberGasket && isMildFluid && isTempL1);
+
+    const l1Checks = [
+        { label: "Path A: Uses a Rubber Gasket (Sec 5.1 / App. G)", pass: rubberQualifiesL1, note: isRubberGasket ? (rubberQualifiesL1 ? "Yes (Rubber)" : "Conservative L2") : "No" },
+        { label: "Path B: Classified as a Designed Flange", pass: chkDesignedFlange, note: chkDesignedFlange ? "Yes" : "No" },
+        { label: "Path C1: Non-Flammable, Non-Toxic & Not Damaging", pass: isMildFluid, note: srv.hazard },
+        { label: "Path C2: Operating Pressure ≤ 1035 kPa", pass: isPressL1, note: `${opPress} kPa` },
+        { label: "Path C3: Operating Temperature ≤ 90°C", pass: isTempL1, note: `${opTemp} °C` },
+        { label: "Path C4: Outside Ammonia Plant Battery Limits", pass: isNotAmmonia, note: isNotAmmonia ? "Pass" : "In Ammonia BL" }
+    ];
+
+    let jointLevel = 2;
+    let classificationReasons = [];
+
+    if (triggeredL3.length > 0) {
+        jointLevel = 3;
+        triggeredL3.forEach(t => classificationReasons.push(`Level 3 Trigger: ${t.label}${t.detail ? ' (' + t.detail + ')' : ''}`));
+    } else if (rubberQualifiesL1 || chkDesignedFlange || meetsAll4MildCriteria) {
+        jointLevel = 1;
+        if (rubberQualifiesL1) {
+            classificationReasons.push("Qualifies as Level 1 under Section 5.1: Joint uses a Rubber Gasket (and no Level 3 triggers apply).");
+        }
+        if (chkDesignedFlange) {
+            classificationReasons.push("Qualifies as Level 1 under Section 5.1: Joint meets the definition of a Designed Flange (non-ASME B16.5/B16.47).");
+        }
+        if (meetsAll4MildCriteria) {
+            classificationReasons.push("Qualifies as Level 1 under Section 5.1: Fluid is non-flammable, non-toxic, and not damaging to human tissue, Operating Pressure ≤ 1035 kPa, Operating Temp ≤ 90°C, and outside Ammonia battery limits.");
+        }
+    } else {
+        jointLevel = 2;
+        classificationReasons.push("Classified as Level 2 (General Service per Section 5.2): Does not trigger Level 3, and does not meet Level 1 mild-service criteria:");
+        if (!isMildFluid) classificationReasons.push(`Fluid service (${srv.name}) is corrosive / damaging to human tissue or environment.`);
+        if (!isTempL1) classificationReasons.push(`Operating temperature (${opTemp}°C) exceeds Level 1 limit of 90°C (but is ≤ 150°C).`);
+        if (!isRubberGasket) classificationReasons.push(`Joint uses a non-rubber gasket (${gasketName}).`);
+    }
+
+    // Update Banner
+    const banner = document.getElementById("classificationBanner");
+    const badge = document.getElementById("jointLevelBadge");
+    const titleEl = document.getElementById("classificationTitle");
+    const reasonsEl = document.getElementById("classificationReasons");
+    const compEl = document.getElementById("competencySummary");
+
+    banner.className = `classification-banner banner-level-${jointLevel}`;
+    badge.className = `badge badge-level-${jointLevel}`;
+    badge.innerText = `LEVEL ${jointLevel} JOINT`;
+
+    if (jointLevel === 1) {
+        titleEl.innerText = "Level 1 Joint — Mild Service / Low Risk Application";
+        compEl.innerText = "Min. Competency (Sec 4.1): Site Mechanical Maintenance Technician + Read & Understood Doc 38847";
+    } else if (jointLevel === 2) {
+        titleEl.innerText = "Level 2 Joint — General Service Application";
+        compEl.innerText = "Min. Competency (Sec 4.1): Level 1 Requirements + Deemed Competent by Maintenance Team Leader";
+    } else {
+        titleEl.innerText = "Level 3 Joint — Critical Service Application";
+        compEl.innerText = specInfo.isNaturalGas
+            ? "Min. Competency (Sec 4.1): Level 3 Authorised + Current Industrial Gas / Type B Maintenance Training"
+            : "Min. Competency (Sec 4.1): Specialist Bolting Vendor, SME/Senior Tech, or Site Flange Mgmt Competency";
+    }
+
+    reasonsEl.innerHTML = classificationReasons.map(r => `<li>${r}</li>`).join("");
+
+    document.getElementById("level3AuditRows").innerHTML = l3Checks.map(c => `
+        <div class="crit-row">
+            <span>${c.label}</span>
+            <span class="pill ${c.trig ? 'pill-trig3' : 'pill-pass'}">${c.trig ? 'TRIGGERED (L3)' : 'No'}</span>
+        </div>
+    `).join("");
+
+    document.getElementById("level1AuditRows").innerHTML = l1Checks.map(c => `
+        <div class="crit-row">
+            <span>${c.label}</span>
+            <span class="pill ${c.pass ? 'pill-pass' : 'pill-trig2'}">${c.note}</span>
+        </div>
+    `).join("");
+
+    // Update Technical Cards
+    document.getElementById("specDesignLimitDisplay").value = `${specInfo.designP} kPag @ ${specInfo.designT}°C`;
+    document.getElementById("fluidHazardDisplay").value = srv.hazard;
+
+    document.getElementById("outSpecCode").innerText = `${specInfo.code} (${specInfo.area})`;
+    document.getElementById("pipeMat").innerText = specInfo.mat;
+    document.getElementById("flangeRating").innerText = specInfo.rating;
+    document.getElementById("tempLimit").innerText = `${specInfo.designP} kPag @ ${specInfo.designT}°C`;
+    document.getElementById("corrAllow").innerText = specInfo.corr;
+
+    document.getElementById("boltGrade").innerText = displayBoltGrade;
+    document.getElementById("nutGrade").innerText = specInfo.nutSpec;
+    document.getElementById("boltDia").innerText = `${bDim.dia}" (${bDim.dia.includes('1 ') || bDim.dia === '2' || bDim.dia === '3' ? '8UN' : 'UNC'})`;
+    document.getElementById("boltCount").innerText = `${bDim.count} Studs`;
+
+    document.getElementById("gasketType").innerText = chkRTJ ? "Ring Type Joint (RTJ Oval/Octagonal - App. H)" : gasketName;
+    document.getElementById("gasketThk").innerText = `${gasketThk.toFixed(1)} mm`;
+    const maxGapMm = (gasketThk * 2).toFixed(1);
+    document.getElementById("maxFaceGap").innerText = `< ${maxGapMm} mm (2 × Gasket Thk)`;
+    document.getElementById("refMaxGap").innerText = `< ${maxGapMm} mm`;
+
+    const isHard = chkRTJ || specInfo.isHardGasket;
+    document.getElementById("defectCat").innerText = isHard ? "Hard Faced Gasket (App. J)" : "Soft Faced Gasket (App. J)";
+    document.getElementById("defW4").innerText = isHard ? "< 0.76 mm" : "< 1.27 mm";
+    document.getElementById("defW2").innerText = isHard ? "< 0.25 mm" : "< 0.76 mm";
+    document.getElementById("def3W4").innerText = isHard ? "Not Allowed (0 mm)" : "< 0.13 mm";
+    document.getElementById("sprayGuard").innerText = guardText;
+
+    // Torque & Appendix G Handling
+    const isAppendixGJoint = specInfo.isNonMetallicFlange || specInfo.isRubberLined;
+
+    if (isAppendixGJoint) {
+        document.getElementById("targetTorqueNm").innerText = "1/3 Rubber Crush (App. G)";
+        document.getElementById("targetTorqueFtLbs").innerText = `Max Steel Ref: ${torqueObj.nm} Nm`;
+        document.getElementById("torqueBasisNote").innerText = "Appendix G: Compress rubber gasket/lining by max 1/3 thickness — DO NOT apply full steel Table F-1 torque!";
+
+        document.getElementById("t30Nm").innerText = `~${Math.round(torqueObj.nm * 0.15)} Nm (Snug)`;
+        document.getElementById("t30Ft").innerText = `~${Math.round(torqueObj.ft * 0.15)} ft-lbs`;
+        document.getElementById("t60Nm").innerText = `~${Math.round(torqueObj.nm * 0.25)} Nm (Check Crush)`;
+        document.getElementById("t60Ft").innerText = `~${Math.round(torqueObj.ft * 0.25)} ft-lbs`;
+        const appG100Nm = "1/3 Gasket/Liner Crush";
+        document.getElementById("t100Nm").innerText = appG100Nm;
+        document.getElementById("t100Ft").innerText = "Stop at 1/3 Crush";
+        document.getElementById("t100Nm_4").innerText = appG100Nm;
+        document.getElementById("t100Ft_4").innerText = "Circular Check";
+        document.getElementById("tStage5Nm").innerText = appG100Nm;
+        document.getElementById("tStage5Ft").innerText = "Verify Even Gap";
+    } else {
+        document.getElementById("targetTorqueNm").innerText = `${torqueObj.nm} Nm`;
+        document.getElementById("targetTorqueFtLbs").innerText = `${torqueObj.ft} ft.lbs`;
+        document.getElementById("torqueBasisNote").innerText = `Appendix E Table F-1 (${bDim.dia}" Stud, ${torqueKey === 'B7_blue' ? 'μ = 0.07 Fluoropolymer' : 'μ = 0.11 Nickel Anti-Seize'})`;
+
+        document.getElementById("t30Nm").innerText = `${Math.round(torqueObj.nm * 0.30)} Nm`;
+        document.getElementById("t30Ft").innerText = `${Math.round(torqueObj.ft * 0.30)} ft.lbs`;
+        document.getElementById("t60Nm").innerText = `${Math.round(torqueObj.nm * 0.60)} Nm`;
+        document.getElementById("t60Ft").innerText = `${Math.round(torqueObj.ft * 0.60)} ft.lbs`;
+        document.getElementById("t100Nm").innerText = `${torqueObj.nm} Nm`;
+        document.getElementById("t100Ft").innerText = `${torqueObj.ft} ft.lbs`;
+        document.getElementById("t100Nm_4").innerText = `${torqueObj.nm} Nm`;
+        document.getElementById("t100Ft_4").innerText = `${torqueObj.ft} ft.lbs`;
+
+        if (chkRTJ) {
+            document.getElementById("stage5Pct").innerText = "100% → ~70%";
+            document.getElementById("tStage5Nm").innerText = `${torqueObj.nm} → ${Math.round(torqueObj.nm * 0.70)} Nm`;
+            document.getElementById("tStage5Ft").innerText = `${torqueObj.ft} → ${Math.round(torqueObj.ft * 0.70)} ft.lbs`;
+            document.getElementById("stage5Method").innerText = "RTJ Pass (Table 6-2): Work circularly at 100% until just over halfway, then reduce torque (~70%) until next nut just turns to avoid over-crushing RTJ.";
+        } else {
+            document.getElementById("stage5Pct").innerText = "100%";
+            document.getElementById("tStage5Nm").innerText = `${torqueObj.nm} Nm`;
+            document.getElementById("tStage5Ft").innerText = `${torqueObj.ft} ft.lbs`;
+            document.getElementById("stage5Method").innerText = "Repeat Stage 4 circular pass at 100% until no further nut rotation occurs.";
+        }
+    }
+
+    // Update Sticky Mobile Bar
+    document.getElementById("mStickySpec").innerText = `${specInfo.code.split('_')[0]} • DN${size}`;
+    document.getElementById("mStickyStuds").innerText = `${bDim.count} × ${bDim.dia}" Studs`;
+    document.getElementById("mStickyTorque").innerText = isAppendixGJoint
+        ? "1/3 Crush (App. G)"
+        : `${torqueObj.nm} Nm (${torqueObj.ft} ft-lb)`;
+    const mStickyBadge = document.getElementById("mStickyBadge");
+    mStickyBadge.className = `m-badge badge-level-${jointLevel}`;
+    mStickyBadge.innerText = `LEVEL ${jointLevel}`;
+
+    // Table 5-1 QA & Tooling Requirements
+    const needsPoweredTorque = (!isAppendixGJoint && torqueObj.nm > 700);
+    if (jointLevel === 1) {
+        document.getElementById("toolingReq").innerText = "Manual or Auxiliary Powered Tools (Table 5-1)";
+        document.getElementById("tagReq").innerText = "Green Level 1 Joint Tag Only (App. C)";
+        document.getElementById("ficReq").innerText = "Not Required";
+        document.getElementById("qaFiling").innerText = "Operations Team Leader removes & discards tag post leak-free start-up (Sec 4.2)";
+    } else if (jointLevel === 2) {
+        document.getElementById("toolingReq").innerText = needsPoweredTorque
+            ? "Calibrated Powered / Hydraulic Torque Tool (>700 Nm limit per Sec 6.6)"
+            : "Calibrated Torque Wrench (≤700 Nm) / RAD Gun / Hydraulic Torque Tool";
+        document.getElementById("tagReq").innerText = "4-Section Perforated Flange Tag (App. D)";
+        document.getElementById("ficReq").innerText = "Not Required (Table 5-1)";
+        document.getElementById("qaFiling").innerText = "Retain Flange Tag sections with Job Workpack or PTW paperwork (Sec 4.2)";
+    } else {
+        document.getElementById("toolingReq").innerText = chkTensioning
+            ? "Calibrated Hydraulic Stud Tensioning Equipment (Sec 6.6)"
+            : (needsPoweredTorque
+                ? "Calibrated Hydraulic Torque Wrench / Powered Torque Equipment (>700 Nm)"
+                : "Calibrated Torque or Tension Measuring Tooling (Table 5-1)");
+        document.getElementById("tagReq").innerText = "4-Section Perforated Flange Tag + Mark Sequence on Flange";
+        document.getElementById("ficReq").innerText = "Mandatory: Disconnection FIC (38848) & Reconnection FIC (38849)";
+        document.getElementById("qaFiling").innerText = "File FICs & Flange Tags in Workpack (signed off by Completions Engineer) or PTW";
+    }
+
+    // Warnings & Engineering Alerts
+    const alerts = [];
+
+    if (guardText.includes("Mandatory")) {
+        alerts.push({
+            type: "danger",
+            html: "<strong>Mandatory Acid Splash Guard:</strong> Fit Teflon <em>Ramco Spra-Gard 150</em> (and <em>Spray Stop</em> valve covers) to all flanged connections prior to line pressurisation."
+        });
+    }
+
+    if (specInfo.isRubberLined) {
+        alerts.push({
+            type: "warning",
+            html: "<strong>Rubber-Lined Flange Procedure (Appendix G):</strong> Do <u>not</u> apply full steel Table F-1 torque! The rubber lining must not compress more than <strong>1/3 of its thickness</strong> or the lining will tear from the metal face. Use a full-face cured rubber gasket <strong>≤ 50 Shore A</strong> (thickness ≥ 3.2 mm) and apply water-based silicone or never-seize release agent to the rubber face."
+        });
+    }
+
+    if (specInfo.isNonMetallicFlange) {
+        alerts.push({
+            type: "warning",
+            html: "<strong>FRP / Thermoplastic Flange Procedure (Appendix G &amp; H):</strong> Do <u>not</u> over-tighten! Tighten bolts evenly only until the rubber gasket is compressed <strong>1/3 of its thickness</strong>. Over-tightening FRP or plastic stub flanges will crack the flange away from the pipe. Never use low-compressibility PTFE (TopChem 2005) on FRP or HDPE flanges."
+        });
+    }
+
+    if (lub === "blue") {
+        alerts.push({
+            type: "info",
+            html: "<strong>Fluoropolymer Coated Blue B7 Studs (Appendix A):</strong> Must <u>NOT</u> be coated with any thread lubricant. Torque values are calculated at μ = 0.07 dry."
+        });
+    }
+
+    if (chkAmmoniaBL) {
+        alerts.push({
+            type: "danger",
+            html: "<strong>Ammonia Service Controls (Sec 6.4 &amp; App. A):</strong> Copper-based anti-seize is <u>strictly prohibited</u> in or near Ammonia services. Any existing <strong>B7M</strong> studs/bolts must be replaced on an opportunity basis with <strong>ASTM A320 Gr L7</strong> (low temp) or <strong>ASTM A193 Gr B7</strong> (high temp)."
+        });
+    }
+
+    if (chosenBoltType === "B8M_CL1") {
+        alerts.push({
+            type: "danger",
+            html: "<strong>Fastener Grade Restriction (Appendix F):</strong> Unstrained Grade B8 / B8M Class 1 stud bolts have low yield strength and <u>should not be used on site</u>. Use strain-hardened <strong>ASTM A193 Grade B8M Class 2</strong> fasteners for corrosive stainless steel applications."
+        });
+    } else if (specInfo.boltSpec.includes("B8") || chosenBoltType === "B8M_CL2") {
+        alerts.push({
+            type: "info",
+            html: "<strong>Stainless Steel Fasteners (Appendix A &amp; F):</strong> Verify stud end stampings for <strong>B8M Class 2</strong> (strain hardened) and apply Loctite 771 Nickel Anti-Seize to threads and nut bearing face to prevent galling."
+        });
+    }
+
+    if (needsPoweredTorque) {
+        alerts.push({
+            type: "warning",
+            html: `<strong>High Torque Load (${torqueObj.nm} Nm > 700 Nm Limit — Sec 3.4 &amp; 6.6):</strong> Hand torque wrenches are only acceptable up to 700 Nm. Powered/hydraulic torque tooling is required. Record reaction-arm pinch points, backup wrench hazards, and impact-rated socket checks in the JSA.`
+        });
+    }
+
+    if (specInfo.isNaturalGas) {
+        alerts.push({
+            type: "danger",
+            html: "<strong>Natural Gas / Fuel Gas Competency (Sec 4.1 &amp; 6.2):</strong> Personnel must hold current site competency in <em>Industrial Gas / Type B Maintenance</em> training. Place an earthing lead across the joint prior to breaking to prevent arcing."
+        });
+    }
+
+    const alertStack = document.getElementById("alertStack");
+    alertStack.innerHTML = alerts.map(a => `<div class="alert-box alert-${a.type}">${a.html}</div>`).join("");
+
+    renderBoltCircleSVG(bDim.count);
+}
+
+// ============================================================================
+// 7. APPENDIX B SVG BOLT CIRCLE GENERATOR
+// ============================================================================
+function renderBoltCircleSVG(boltCount) {
+    const svg = document.getElementById("flangeSvg");
+    const seq = appendixBSequences[boltCount] || appendixBSequences[8];
+    document.getElementById("seqBoltLabel").innerText = `${boltCount}-Bolt Pattern`;
+
+    const cx = 130, cy = 130, outerR = 112, pitchR = 86, boreR = 48;
+    let html = `
+        <circle cx="${cx}" cy="${cy}" r="${outerR}" fill="#f1f5f9" stroke="#334155" stroke-width="2.5"/>
+        <circle cx="${cx}" cy="${cy}" r="${pitchR}" fill="none" stroke="#94a3b8" stroke-dasharray="4,4" stroke-width="1.2"/>
+        <circle cx="${cx}" cy="${cy}" r="${boreR}" fill="#ffffff" stroke="#334155" stroke-width="2"/>
+    `;
+
+    const n = seq.length;
+    const offsetDeg = -90 + (180 / n);
+
+    for (let i = 0; i < n; i++) {
+        const angleRad = (offsetDeg + (i * 360 / n)) * (Math.PI / 180);
+        const bx = cx + pitchR * Math.cos(angleRad);
+        const by = cy + pitchR * Math.sin(angleRad);
+        const seqNum = seq[i];
+        const isFirst4 = seqNum <= 4;
+
+        html += `
+            <circle cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" r="13"
+                fill="${isFirst4 ? '#003b6f' : '#ffffff'}"
+                stroke="#003b6f" stroke-width="2"/>
+            <text x="${bx.toFixed(1)}" y="${(by + 4).toFixed(1)}"
+                text-anchor="middle" font-size="11" font-weight="bold"
+                fill="${isFirst4 ? '#ffffff' : '#003b6f'}">${seqNum}</text>
+        `;
+    }
+
+    svg.innerHTML = html;
+    document.getElementById("seqOrderText").innerHTML =
+        `<strong>Numbered Bolt Positions (Clockwise from Top-Right):</strong><br>${seq.join(" → ")}<br><em>Tighten in numerical order: 1 → 2 → 3 → ... → ${n}</em>`;
+}
+
+// Auto-collapse drawers on small smartphone screens for cleaner initial view
+window.onload = function() {
+    if (window.innerWidth <= 680) {
+        document.getElementById("advancedDrawer").removeAttribute("open");
+        document.getElementById("auditDrawer").removeAttribute("open");
+    }
+    updateSpecDropdown();
+};
+</script>
+
+</body>
+</html>
